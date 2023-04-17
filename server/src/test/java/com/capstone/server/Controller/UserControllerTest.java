@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.annotation.PostConstruct;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
@@ -83,7 +82,7 @@ class UserControllerTest {
     void token_renew_test() throws Exception{
         when(tokenService.getUsername(anyString())).thenReturn("test123");
         when(tokenService.TokenAvailableCheck(anyString())).thenReturn(true);
-        when(tokenService.tokenRenew(anyString(), anyString())).thenReturn("");
+        when(tokenService.TokenRenew(anyString(), anyString())).thenReturn("");
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("refresh_token", "");
@@ -94,6 +93,19 @@ class UserControllerTest {
                     .header("Authorization", "token"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.access_token").value(""));
+    }
+
+    @Test
+    @WithUserDetails("test123")
+    void logout_test() throws Exception{
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("user_id", "test123");
+        String content = objectMapper.writeValueAsString(jsonObject);
+        mvc.perform(post("/users/logout")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "token"))
+            .andExpect(status().isOk());
     }
 
 }

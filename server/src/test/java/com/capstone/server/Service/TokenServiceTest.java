@@ -57,5 +57,13 @@ class TokenServiceTest {
         verify(tokenRepository).save(argThat(Token->Token.isStatus()));
     }
 
+    @Test
+    void token_update_test(){
+        when(tokenRepository.findById(anyString()))
+                .thenReturn(Optional.of(Token.builder().userId("test123").token("token").status(true).build()));
+        tokenService.TokenUpdate("test123", "");
+        verify(tokenRepository).save(argThat(token->token.getToken().equals("") && !token.isStatus()));
+    }
+
 
 }
