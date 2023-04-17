@@ -68,5 +68,10 @@ class UserServiceTest {
         verify(tokenService, times(1)).TokenSave(any(TokenDTO.class));
     }
 
+    @Test
+    void AutoLogin_test(){
+        //tokenservice를 실행하는 것이 전부이므로 테스트할 내용이 없음.
+    }
+
 
 }
