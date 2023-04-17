@@ -3,6 +3,7 @@ package com.capstone.server.Controller;
 import com.capstone.server.DTO.RequestDTO.JoinRequestDTO;
 import com.capstone.server.Domain.User;
 import com.capstone.server.Repository.UserRepository;
+import com.capstone.server.Service.TokenService;
 import com.capstone.server.Service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.annotation.PostConstruct;
@@ -19,9 +21,9 @@ import javax.annotation.PostConstruct;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment =  SpringBootTest.WebEnvironment.MOCK)
@@ -33,6 +35,8 @@ class UserControllerTest {
     ObjectMapper objectMapper;
     @MockBean
     UserService userService;
+    @MockBean
+    TokenService tokenService;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -60,6 +64,16 @@ class UserControllerTest {
                     .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         verify(userService, times(1)).join(argThat(joinRequestDTO->joinRequestDTO.getId().equals("test12345")));
+    }
+
+    @Test
+    @WithUserDetails("test123")
+    void auto_login_test() throws Exception{
+        when(tokenService.getUsername(anyString())).thenReturn("test123");
+        mvc.perform(get("/users/authorize/auto")
+                        .header("Authorization", "token"))
+                .andExpect(status().isOk());
+        verify(userService, times(1)).AutoLogin(argThat(String->String.equals("test123")));
     }
 
 }

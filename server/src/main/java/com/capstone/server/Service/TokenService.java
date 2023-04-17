@@ -3,7 +3,6 @@ package com.capstone.server.Service;
 import com.auth0.jwt.JWT;
 import com.capstone.server.DTO.TokenDTO;
 import com.capstone.server.Domain.Token;
-import com.capstone.server.Domain.User;
 import com.capstone.server.Exception.ApiException;
 import com.capstone.server.Exception.ExceptionEnum;
 import com.capstone.server.Repository.TokenRepository;
@@ -38,7 +37,7 @@ public class TokenService {
         }
     }
 
-    public void getLoginStatus(String userId){
+    public void setLoginStatus(String userId){
         Optional<Token> token = tokenRepository.findById(userId);
         if(token.isPresent()) {
             TokenDTO tokenDTO = new TokenDTO(token.get().getUserId(), token.get().getToken(), token.get().isStatus());
