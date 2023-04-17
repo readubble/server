@@ -95,4 +95,17 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.data.access_token").value(""));
     }
 
+    @Test
+    @WithUserDetails("test123")
+    void logout_test() throws Exception{
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("user_id", "test123");
+        String content = objectMapper.writeValueAsString(jsonObject);
+        mvc.perform(post("/users/logout")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "token"))
+            .andExpect(status().isOk());
+    }
+
 }
