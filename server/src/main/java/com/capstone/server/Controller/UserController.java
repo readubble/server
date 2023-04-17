@@ -82,12 +82,21 @@ public class UserController {
     public ResultResponseDTO tokenRenew(@RequestHeader("Authorization") String Authorization, @RequestBody JSONObject jsonObject, HttpServletResponse response, HttpServletRequest request){
         String userId = tokenService.getUsername(Authorization);
         String RefreshToken = jsonObject.get("refresh_token").toString();
-        String accessToken = tokenService.tokenRenew(RefreshToken, userId);
+        String accessToken = tokenService.TokenRenew(RefreshToken, userId);
         JSONObject result = new JSONObject();
         result.put("access_token", accessToken);
         return ResultResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(result).build();
+    }
+
+    @PostMapping("/users/logout")
+    public ResponseDTO logout(@RequestHeader("Authorization") String Authorization, @RequestBody JSONObject jsonObject){
+        String userId = jsonObject.get("user_id").toString();
+        tokenService.TokenUpdate(userId, Authorization);
+        return ResponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase()).build();
     }
 }

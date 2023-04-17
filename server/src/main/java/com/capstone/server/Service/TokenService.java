@@ -73,7 +73,7 @@ public class TokenService {
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
         return jwtAccessToken;
     }
-    public String tokenRenew(String refreshToken, String userId) throws ApiException {
+    public String TokenRenew(String refreshToken, String userId) throws ApiException {
         if(getUsername(refreshToken).equals(userId) && tokenRepository.existsByToken(refreshToken)){
             if (!TokenAvailableCheck(refreshToken)) { //refresh token이 만료 -> 재로그인 필요
                 throw new ApiException(ExceptionEnum.EXPIRED_TOKEN);
@@ -84,5 +84,14 @@ public class TokenService {
         } else{ //유효하지 않은 토큰
             throw new ApiException(ExceptionEnum.TOKEN_ERROR);
         }
+    }
+
+    public void TokenUpdate(String userId, String accessToken){
+        Optional<Token> token = tokenRepository.findById(userId);
+        Token newToken = Token.builder()
+                .userId(token.get().getUserId())
+                .token(accessToken)
+                .status(false).build();
+        tokenRepository.save(newToken);
     }
 }
