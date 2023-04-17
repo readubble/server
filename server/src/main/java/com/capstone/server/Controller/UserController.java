@@ -9,13 +9,13 @@ import com.capstone.server.JWT.JwtProperties;
 import com.capstone.server.Service.TokenService;
 import com.capstone.server.Service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.Http;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -76,6 +76,18 @@ public class UserController {
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(jsonObject).build();
+    }
 
+    @PostMapping("/users/authorize/token")
+    public ResultResponseDTO tokenRenew(@RequestHeader("Authorization") String Authorization, @RequestBody JSONObject jsonObject, HttpServletResponse response, HttpServletRequest request){
+        String userId = tokenService.getUsername(Authorization);
+        String RefreshToken = jsonObject.get("refresh_token").toString();
+        String accessToken = tokenService.tokenRenew(RefreshToken, userId);
+        JSONObject result = new JSONObject();
+        result.put("access_token", accessToken);
+        return ResultResponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(result).build();
     }
 }

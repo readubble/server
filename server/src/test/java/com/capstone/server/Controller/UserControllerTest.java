@@ -6,6 +6,7 @@ import com.capstone.server.Repository.UserRepository;
 import com.capstone.server.Service.TokenService;
 import com.capstone.server.Service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,6 +25,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment =  SpringBootTest.WebEnvironment.MOCK)
@@ -74,6 +76,24 @@ class UserControllerTest {
                         .header("Authorization", "token"))
                 .andExpect(status().isOk());
         verify(userService, times(1)).AutoLogin(argThat(String->String.equals("test123")));
+    }
+
+    @Test
+    @WithUserDetails("test123")
+    void token_renew_test() throws Exception{
+        when(tokenService.getUsername(anyString())).thenReturn("test123");
+        when(tokenService.TokenAvailableCheck(anyString())).thenReturn(true);
+        when(tokenService.tokenRenew(anyString(), anyString())).thenReturn("");
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("refresh_token", "");
+        String content = objectMapper.writeValueAsString((jsonObject));
+        mvc.perform(post("/users/authorize/token")
+                    .content(content)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "token"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.access_token").value(""));
     }
 
 }
