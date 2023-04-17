@@ -14,9 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -66,5 +64,18 @@ public class UserController {
         response.setCharacterEncoding("UTF-8");
         String result = om.writeValueAsString(responseDTO);
         response.getWriter().write(result);
+    }
+
+    @GetMapping("/users/authorize/auto")
+    public ResultResponseDTO autoLogin(@RequestHeader("Authorization") String Authorization){
+        String userId = tokenService.getUsername(Authorization.replace(JwtProperties.TOKEN_PREFIX, ""));
+        userService.AutoLogin(userId);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("user_id", userId);
+        return ResultResponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(jsonObject).build();
+
     }
 }
