@@ -15,6 +15,10 @@ import org.springframework.boot.test.context.ConfigDataApplicationContextInitial
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.util.Date;
+import java.util.Optional;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,26 +41,26 @@ class UserServiceTest {
     static void setup(){
         userDTO = UserDTO.builder()
                 .id("12345")
-                .email("test@tester.com")
-                .nickname("tester")
-                .password("1234")
+                .userNm("tester")
+                .userPw("1234")
+                .userExp(0)
+                .userLevel("L1")
+                .joinDt(new Date())
+                .userPhotoIn("")
                 .role("ROLE_USER")
                 .build();
     }
     @Test
     void join_test(){
         //given
-        when(userRepository.existsByEmail(userDTO.getEmail()))
-                .thenReturn(false);
         when(userRepository.existsById(userDTO.getId()))
                 .thenReturn(false);
-        when(userRepository.existsByNickname(userDTO.getUserNm()))
+        when(userRepository.existsByUserNm(userDTO.getUserNm()))
                 .thenReturn(false);
 
         //when
         userService.join(JoinRequestDTO.builder()
                 .id(userDTO.getId())
-                .email(userDTO.getEmail())
                 .nickname(userDTO.getUserNm())
                 .password(userDTO.getUserPw())
                 .role(userDTO.getRole()).build());
@@ -69,6 +73,15 @@ class UserServiceTest {
     @Test
     void AutoLogin_test(){
         //tokenservice를 실행하는 것이 전부이므로 테스트할 내용이 없음.
+    }
+
+    @Test
+    void getUserInfo_test(){
+        when(userRepository.findById(anyString()))
+                .thenReturn(Optional.of(userDTO.toEntity()));
+        UserDTO userDTO = userService.getUserInfo("1234");
+        verify(userRepository, times(1)).findById(anyString());
+        assertThat(userDTO.getUserLevel()).isEqualTo("L1");
     }
 
 

@@ -31,9 +31,7 @@ public class UserService {
     }
 
     public void join(JoinRequestDTO user){
-        if (userRepository.existsByEmail(user.getEmail())){
-            throw new ApiException(ExceptionEnum.EMAIL_DUPLICATE);
-        }else if (userRepository.existsByNickname(user.getNickname())){
+        if (userRepository.existsByUserNm(user.getNickname())){
             throw new ApiException(ExceptionEnum.NICKNAME_DUPLICATE);
         }else if (userRepository.existsById(user.getId())){
             throw new ApiException(ExceptionEnum.ID_DUPLICATE);

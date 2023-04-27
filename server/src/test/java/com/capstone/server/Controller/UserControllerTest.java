@@ -1,10 +1,12 @@
 package com.capstone.server.Controller;
 
 import com.capstone.server.DTO.RequestDTO.JoinRequestDTO;
+import com.capstone.server.DTO.UserDTO;
 import com.capstone.server.Domain.User;
 import com.capstone.server.Repository.UserRepository;
 import com.capstone.server.Service.TokenService;
 import com.capstone.server.Service.UserService;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,9 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.annotation.PostConstruct;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -47,16 +52,18 @@ class UserControllerTest {
     void setting(){
         userRepository.save(User.builder()
                 .id("test123")
-                .email("test@tester.com")
-                .nickname("tester")
-                .password(bCryptPasswordEncoder.encode("1234"))
+                .userNm("tester")
+                .userPw(bCryptPasswordEncoder.encode("1234"))
+                .joinDt(new Date())
+                .userLevel("L1")
+                .userExp(0)
+                .userPhotoIn("")
                 .role("ROLE_USER").build());
     }
     @Test
     void join_test() throws Exception{
         String content = objectMapper.writeValueAsString((JoinRequestDTO.builder()
                 .id("test12345")
-                .email("test1@tester.com")
                 .nickname("tester2")
                 .password("1234")
                 .role("ROLE_USER").build()));
@@ -106,6 +113,27 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "token"))
             .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("test123")
+    void userInfo_test() throws Exception{
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
+        when(userService.getUserInfo(anyString()))
+                .thenReturn(UserDTO.builder()
+                        .id("test123")
+                        .userNm("tester")
+                        .userPw(bCryptPasswordEncoder.encode("1234"))
+                        .joinDt(date)
+                        .userLevel("L1")
+                        .userExp(0)
+                        .userPhotoIn("")
+                        .role("ROLE_USER").build());
+        mvc.perform(get("/users/test123")
+                .header("Authorization", "token"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.date").value(simpleDateFormat.format(date)));
     }
 
 }
