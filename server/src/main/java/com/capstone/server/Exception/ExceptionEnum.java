@@ -11,6 +11,7 @@ public enum ExceptionEnum {
     ACCESS_DENIED_EXCEPTION(HttpStatus.UNAUTHORIZED, 403, "unauthorized"),
     RUNTIME_EXCEPTION(HttpStatus.BAD_REQUEST, 404, "bad request"),
 
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, 400, "Bad Request"),
     EMAIL_DUPLICATE(HttpStatus.BAD_REQUEST, 400, "email duplicated"),
     NICKNAME_DUPLICATE(HttpStatus.BAD_REQUEST, 400, "nickname duplicated"),
     ID_DUPLICATE(HttpStatus.BAD_REQUEST, 400, "id duplicated"),
