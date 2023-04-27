@@ -1,9 +1,7 @@
 package com.capstone.server.Repository;
 
-import com.capstone.server.DTO.UserDTO;
 import com.capstone.server.Domain.User;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +29,8 @@ class UserRepositoryTest {
     static void setup(){
         user = User.builder()
                 .id("12345")
-                .email("test@tester.com")
-                .nickname("tester")
-                .password("1234")
+                .userNm("tester")
+                .userPw("1234")
                 .role("ROLE_USER")
                 .build();
     }
@@ -52,28 +49,18 @@ class UserRepositoryTest {
         Optional<User> user_two = userRepository.findById("123");
 
         assertThat(user_one).isNotEmpty();
-        assertThat(user_one.get().getEmail()).isEqualTo("test@tester.com");
+        assertThat(user_one.get().getUserNm().equals("tester"));
 
         assertThat(user_two).isEmpty();
     }
 
-    @Test
-    void existsByEmail_test(){
-        userRepository.save(user);
-
-        boolean result_one = userRepository.existsByEmail("test@tester.com");
-        boolean result_two = userRepository.existsByEmail("test2@tester.com");
-
-        assertTrue(result_one);
-        assertFalse(result_two);
-    }
 
     @Test
     void existsByNickname_test(){
         userRepository.save(user);
 
-        boolean result_one = userRepository.existsByNickname("tester");
-        boolean result_two = userRepository.existsByNickname("test2");
+        boolean result_one = userRepository.existsByUserNm("tester");
+        boolean result_two = userRepository.existsByUserNm("test2");
 
         assertTrue(result_one);
         assertFalse(result_two);

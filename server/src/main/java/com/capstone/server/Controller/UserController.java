@@ -4,6 +4,7 @@ import com.capstone.server.DTO.RequestDTO.JoinRequestDTO;
 import com.capstone.server.DTO.ResponseDTO.ResponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResultResponseDTO;
 import com.capstone.server.DTO.TokenDTO;
+import com.capstone.server.DTO.UserDTO;
 import com.capstone.server.Etc.JsonRequestWrapper;
 import com.capstone.server.JWT.JwtProperties;
 import com.capstone.server.Service.TokenService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 @Slf4j
 @RestController
@@ -98,5 +100,21 @@ public class UserController {
         return ResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase()).build();
+    }
+
+    @GetMapping("/users/{id}")
+    public ResultResponseDTO userInfo(@PathVariable("id") String userId){
+        UserDTO userDTO = userService.getUserInfo(userId);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("nickname", userDTO.getUserNm());
+        SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd");
+        jsonObject.put("date", format.format(userDTO.getJoinDt()));
+        jsonObject.put("level", userDTO.getUserLevel());
+        jsonObject.put("exp", userDTO.getUserExp());
+        jsonObject.put("profile", userDTO.getUserPhotoIn());
+        return ResultResponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(jsonObject).build();
     }
 }

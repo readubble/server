@@ -3,12 +3,14 @@ package com.capstone.server.DTO;
 import com.capstone.server.Domain.User;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class UserDTO {
     private String id;
     private String userNm;
