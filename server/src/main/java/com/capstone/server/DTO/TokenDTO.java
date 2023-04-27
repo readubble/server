@@ -19,7 +19,7 @@ public class TokenDTO {
         this.status = status;
     }
 
-    public Token toToken(){
+    public Token toEntity(){
         return Token.builder()
                 .userId(userId)
                 .token(token)
@@ -27,7 +27,7 @@ public class TokenDTO {
                 .build();
     }
 
-    public TokenDTO fromToken(Token token){
+    public TokenDTO fromEntity(Token token){
         return TokenDTO.builder()
                 .userId(token.getUserId())
                 .token(token.getToken())
