@@ -12,11 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
-import org.springframework.data.relational.core.sql.FalseCondition;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,15 +50,15 @@ class UserServiceTest {
                 .thenReturn(false);
         when(userRepository.existsById(userDTO.getId()))
                 .thenReturn(false);
-        when(userRepository.existsByNickname(userDTO.getNickname()))
+        when(userRepository.existsByNickname(userDTO.getUserNm()))
                 .thenReturn(false);
 
         //when
         userService.join(JoinRequestDTO.builder()
                 .id(userDTO.getId())
                 .email(userDTO.getEmail())
-                .nickname(userDTO.getNickname())
-                .password(userDTO.getPassword())
+                .nickname(userDTO.getUserNm())
+                .password(userDTO.getUserPw())
                 .role(userDTO.getRole()).build());
 
         //then

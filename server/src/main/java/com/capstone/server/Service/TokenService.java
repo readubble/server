@@ -26,7 +26,7 @@ public class TokenService {
     }
 
     public void TokenSave(TokenDTO tokenDTO){
-        tokenRepository.save(tokenDTO.toToken());
+        tokenRepository.save(tokenDTO.toEntity());
     }
 
     public String getUsername(String token){
@@ -45,7 +45,7 @@ public class TokenService {
         if(token.isPresent()) {
             TokenDTO tokenDTO = new TokenDTO(token.get().getUserId(), token.get().getToken(), token.get().isStatus());
             tokenDTO.setStatus(true);
-            tokenRepository.save(tokenDTO.toToken());
+            tokenRepository.save(tokenDTO.toEntity());
         } else{
             throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION); //bad request
         }
