@@ -2,9 +2,11 @@ package com.capstone.server.Controller;
 
 import com.capstone.server.DTO.RequestDTO.JoinRequestDTO;
 import com.capstone.server.DTO.UserDTO;
+import com.capstone.server.Domain.TbRead;
 import com.capstone.server.Domain.User;
 import com.capstone.server.Repository.UserRepository;
 import com.capstone.server.Service.QuizAnswerService;
+import com.capstone.server.Service.TbReadService;
 import com.capstone.server.Service.TokenService;
 import com.capstone.server.Service.UserService;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,8 +24,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.annotation.PostConstruct;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -46,6 +51,8 @@ class UserControllerTest {
     TokenService tokenService;
     @MockBean
     QuizAnswerService quizAnswerService;
+    @MockBean
+    TbReadService tbReadService;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -154,6 +161,34 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.data[0].num").value(3))
                 .andExpect(jsonPath("$.data[1].num").value(1))
                 .andExpect(jsonPath("$.data[2].num").value(0));
+    }
+
+    @Test
+    @WithUserDetails("test123")
+    void userProblemInfo_test() throws Exception{
+        List list = new ArrayList();
+        list.add(TbRead.builder().tbUserId("test123")
+                .saveFl("Y")
+                .solveFl("Y")
+                .startTime(Time.valueOf("00:11:00"))
+                .finishTime(Time.valueOf("00:12:00"))
+                .totalTime(Time.valueOf("00:01:00"))
+                .inpSmr("")
+                .inpTopic("")
+                .inpKwd1("")
+                .inpKwd2("")
+                .inpKwd3("")
+                .tbArticleId(1).build());
+
+        when(tbReadService.getUserReadInfo(anyString(), anyString(), anyInt(), anyInt()))
+                .thenReturn(list);
+
+        mvc.perform(get("/users/test123/problem?level=D1")
+                .header("Authorization", "token"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].tbUserId").value("test123"));
+
+
     }
 
 }

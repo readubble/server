@@ -1,6 +1,5 @@
 package com.capstone.server.DTO;
 
-import com.capstone.server.Domain.Read;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +8,7 @@ import java.sql.Time;
 
 @Getter
 @Setter
-public class ReadDTO {
+public class TbReadDTO {
     private int tbArticleId;
     private String tbUserId;
     private String saveFl;
@@ -24,7 +23,7 @@ public class ReadDTO {
     private String inpSmr;
 
     @Builder
-    public ReadDTO(int tbArticleId, String tbUserId, String saveFl, String solveFl, Time startTime, Time finishTime, Time totalTime, String inpKwd1, String inpKwd2, String inpKwd3, String inpTopic, String inpSmr) {
+    public TbReadDTO(int tbArticleId, String tbUserId, String saveFl, String solveFl, Time startTime, Time finishTime, Time totalTime, String inpKwd1, String inpKwd2, String inpKwd3, String inpTopic, String inpSmr) {
         this.tbArticleId = tbArticleId;
         this.tbUserId = tbUserId;
         this.saveFl = saveFl;
@@ -39,8 +38,8 @@ public class ReadDTO {
         this.inpSmr = inpSmr;
     }
 
-    public Read toEntity(){
-        return Read.builder()
+    public com.capstone.server.Domain.TbRead toEntity(){
+        return com.capstone.server.Domain.TbRead.builder()
                 .tbArticleId(tbArticleId)
                 .tbUserId(tbUserId)
                 .saveFl(saveFl)
@@ -54,19 +53,19 @@ public class ReadDTO {
                 .inpTopic(inpTopic)
                 .inpSmr(inpSmr).build();
     }
-    public ReadDTO fromEntity(Read read){
-        return ReadDTO.builder()
-                .tbArticleId(read.getTbArticleId())
-                .tbUserId(read.getTbUserId())
-                .saveFl(read.getSaveFl())
-                .solveFl(read.getSolveFl())
-                .startTime(read.getStartTime())
-                .finishTime(read.getFinishTime())
-                .totalTime(read.getTotalTime())
-                .inpKwd1(read.getInpKwd1())
-                .inpKwd2(read.getInpKwd2())
-                .inpKwd3(read.getInpKwd3())
-                .inpTopic(read.getInpTopic())
-                .inpSmr(read.getInpSmr()).build();
+    public TbReadDTO fromEntity(com.capstone.server.Domain.TbRead tbRead){
+        return TbReadDTO.builder()
+                .tbArticleId(tbRead.getTbArticleId())
+                .tbUserId(tbRead.getTbUserId())
+                .saveFl(tbRead.getSaveFl())
+                .solveFl(tbRead.getSolveFl())
+                .startTime(tbRead.getStartTime())
+                .finishTime(tbRead.getFinishTime())
+                .totalTime(tbRead.getTotalTime())
+                .inpKwd1(tbRead.getInpKwd1())
+                .inpKwd2(tbRead.getInpKwd2())
+                .inpKwd3(tbRead.getInpKwd3())
+                .inpTopic(tbRead.getInpTopic())
+                .inpSmr(tbRead.getInpSmr()).build();
     }
 }
