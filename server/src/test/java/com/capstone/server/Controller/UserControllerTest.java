@@ -4,6 +4,7 @@ import com.capstone.server.DTO.RequestDTO.JoinRequestDTO;
 import com.capstone.server.DTO.UserDTO;
 import com.capstone.server.Domain.User;
 import com.capstone.server.Repository.UserRepository;
+import com.capstone.server.Service.QuizAnswerService;
 import com.capstone.server.Service.TokenService;
 import com.capstone.server.Service.UserService;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -43,6 +44,8 @@ class UserControllerTest {
     UserService userService;
     @MockBean
     TokenService tokenService;
+    @MockBean
+    QuizAnswerService quizAnswerService;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -134,6 +137,23 @@ class UserControllerTest {
                 .header("Authorization", "token"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.date").value(simpleDateFormat.format(date)));
+    }
+
+    @Test
+    @WithUserDetails("test123")
+    void userStatisticsInfo_test() throws Exception{
+        when(quizAnswerService.getUserQuizInfo(anyString(), eq("D1")))
+                .thenReturn(3);
+        when(quizAnswerService.getUserQuizInfo(anyString(), eq("D2")))
+                .thenReturn(1);
+        when(quizAnswerService.getUserQuizInfo(anyString(), eq("D3")))
+                .thenReturn(0);
+        mvc.perform(get("/users/test123/statistics")
+                .header("Authorization", "token"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].num").value(3))
+                .andExpect(jsonPath("$.data[1].num").value(1))
+                .andExpect(jsonPath("$.data[2].num").value(0));
     }
 
 }
