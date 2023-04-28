@@ -1,5 +1,6 @@
 package com.capstone.server.Controller;
 
+import com.capstone.server.DTO.ReadDTO;
 import com.capstone.server.DTO.RequestDTO.JoinRequestDTO;
 import com.capstone.server.DTO.ResponseDTO.ListResultReponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResponseDTO;
@@ -9,6 +10,7 @@ import com.capstone.server.DTO.UserDTO;
 import com.capstone.server.Etc.JsonRequestWrapper;
 import com.capstone.server.JWT.JwtProperties;
 import com.capstone.server.Service.QuizAnswerService;
+import com.capstone.server.Service.ReadService;
 import com.capstone.server.Service.TokenService;
 import com.capstone.server.Service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,12 +34,14 @@ public class UserController {
     private final UserService userService;
     private final TokenService tokenService;
     private final QuizAnswerService quizAnswerService;
+    private final ReadService readService;
 
     @Autowired
-    public UserController(UserService userService, TokenService tokenService, QuizAnswerService quizAnswerService){
+    public UserController(UserService userService, TokenService tokenService, QuizAnswerService quizAnswerService, ReadService readService){
         this.userService = userService;
         this.tokenService = tokenService;
         this.quizAnswerService = quizAnswerService;
+        this.readService = readService;
     }
 
     @PostMapping("/users")
@@ -145,6 +149,14 @@ public class UserController {
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(result).build();
+    }
 
+    @GetMapping("/users/{id}/problem")
+    public ListResultReponseDTO userProblemInfo(@PathVariable("id") String userId, @RequestParam(name="level", required=true) String difficulty, @RequestParam(name="page", required = false, defaultValue = "0") int page, @RequestParam(name="size", required = false, defaultValue = "5") int size){
+        List<ReadDTO> result = readService.getUserReadInfo(userId, difficulty, page, size);
+        return ListResultReponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(result).build();
     }
 }
