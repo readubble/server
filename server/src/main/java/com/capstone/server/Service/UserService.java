@@ -78,5 +78,6 @@ public class UserService {
             throw new ApiException(ExceptionEnum.BAD_REQUEST);
         }
     }
+
 }
 

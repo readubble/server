@@ -1,12 +1,14 @@
 package com.capstone.server.Controller;
 
 import com.capstone.server.DTO.RequestDTO.JoinRequestDTO;
+import com.capstone.server.DTO.ResponseDTO.ListResultReponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResultResponseDTO;
 import com.capstone.server.DTO.TokenDTO;
 import com.capstone.server.DTO.UserDTO;
 import com.capstone.server.Etc.JsonRequestWrapper;
 import com.capstone.server.JWT.JwtProperties;
+import com.capstone.server.Service.QuizAnswerService;
 import com.capstone.server.Service.TokenService;
 import com.capstone.server.Service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,18 +21,23 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestController
 public class UserController {
     private final UserService userService;
     private final TokenService tokenService;
+    private final QuizAnswerService quizAnswerService;
 
     @Autowired
-    public UserController(UserService userService, TokenService tokenService){
+    public UserController(UserService userService, TokenService tokenService, QuizAnswerService quizAnswerService){
         this.userService = userService;
         this.tokenService = tokenService;
+        this.quizAnswerService = quizAnswerService;
     }
 
     @PostMapping("/users")
@@ -116,5 +123,28 @@ public class UserController {
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(jsonObject).build();
+    }
+
+    @GetMapping("/users/{id}/statistics")
+    public ListResultReponseDTO userStatisticsInfo(@PathVariable("id") String userId){
+        String[] difficulty = {"D1", "D2", "D3"};
+        String[] result_difficulty = {"하", "중", "상"};
+
+        List result = new ArrayList();
+        int num_result;
+
+        for(int i=0; i<3; i++) {
+            JSONObject jsonObject = new JSONObject();
+            num_result = quizAnswerService.getUserQuizInfo(userId, difficulty[i]);
+            jsonObject.put("level", result_difficulty[i]);
+            jsonObject.put("num", num_result);
+            result.add(jsonObject);
+        }
+
+        return ListResultReponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(result).build();
+
     }
 }
