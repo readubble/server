@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class ReadPK implements Serializable {
+public class TbReadsPK implements Serializable {
     private int tbArticleId;
     private String tbUserId;
 }

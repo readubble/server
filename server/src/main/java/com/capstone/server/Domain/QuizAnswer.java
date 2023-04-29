@@ -14,7 +14,6 @@ import javax.persistence.*;
 @IdClass(QuizAnswerPK.class)
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class QuizAnswer {
-    @JoinColumn(name = "ARTICLE_ID")
     @Id
     private int tbQuizTbArticleId;
     @Id

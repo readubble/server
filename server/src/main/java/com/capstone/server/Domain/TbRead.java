@@ -1,7 +1,7 @@
 package com.capstone.server.Domain;
 
 
-import com.capstone.server.Domain.PK.ReadPK;
+import com.capstone.server.Domain.PK.TbReadsPK;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,12 +14,13 @@ import java.sql.Time;
 
 @Entity
 @Getter
-@IdClass(ReadPK.class)
+@IdClass(TbReadsPK.class)
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-public class Read {
+public class TbRead {
+    @Id
+    private String tbUserId;
     @Id
     private int tbArticleId;
-    private String tbUserId;
     private String saveFl;
     private String solveFl;
     private Time startTime;
@@ -32,7 +33,7 @@ public class Read {
     private String inpSmr;
 
     @Builder
-    public Read(int tbArticleId, String tbUserId, String saveFl, String solveFl, Time startTime, Time finishTime, Time totalTime, String inpKwd1, String inpKwd2, String inpKwd3, String inpTopic, String inpSmr) {
+    public TbRead(int tbArticleId, String tbUserId, String saveFl, String solveFl, Time startTime, Time finishTime, Time totalTime, String inpKwd1, String inpKwd2, String inpKwd3, String inpTopic, String inpSmr) {
         this.tbArticleId = tbArticleId;
         this.tbUserId = tbUserId;
         this.saveFl = saveFl;
@@ -47,3 +48,4 @@ public class Read {
         this.inpSmr = inpSmr;
     }
 }
+

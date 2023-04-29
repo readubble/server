@@ -1,14 +1,18 @@
 package com.capstone.server.Controller;
 
+import com.capstone.server.DTO.TbReadDTO;
 import com.capstone.server.DTO.RequestDTO.JoinRequestDTO;
 import com.capstone.server.DTO.ResponseDTO.ListResultReponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResultResponseDTO;
 import com.capstone.server.DTO.TokenDTO;
 import com.capstone.server.DTO.UserDTO;
+import com.capstone.server.Domain.TbRead;
 import com.capstone.server.Etc.JsonRequestWrapper;
+import com.capstone.server.Interface.TbReadInterface;
 import com.capstone.server.JWT.JwtProperties;
 import com.capstone.server.Service.QuizAnswerService;
+import com.capstone.server.Service.TbReadService;
 import com.capstone.server.Service.TokenService;
 import com.capstone.server.Service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +35,14 @@ public class UserController {
     private final UserService userService;
     private final TokenService tokenService;
     private final QuizAnswerService quizAnswerService;
+    private final TbReadService tbReadService;
 
     @Autowired
-    public UserController(UserService userService, TokenService tokenService, QuizAnswerService quizAnswerService){
+    public UserController(UserService userService, TokenService tokenService, QuizAnswerService quizAnswerService, TbReadService tbReadService){
         this.userService = userService;
         this.tokenService = tokenService;
         this.quizAnswerService = quizAnswerService;
+        this.tbReadService = tbReadService;
     }
 
     @PostMapping("/users")
@@ -145,6 +150,14 @@ public class UserController {
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(result).build();
+    }
 
+    @GetMapping("/users/{id}/problem")
+    public ListResultReponseDTO userProblemInfo(@PathVariable("id") String userId, @RequestParam(name="level", required=true) String difficulty, @RequestParam(name="page", required = false, defaultValue = "0") int page, @RequestParam(name="size", required = false, defaultValue = "5") int size){
+        List<TbReadInterface> result = tbReadService.getUserReadInfo(userId, difficulty, page, size);
+        return ListResultReponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(result).build();
     }
 }
