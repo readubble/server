@@ -3,6 +3,7 @@ package com.capstone.server.Repository;
 import com.capstone.server.DTO.TbReadDTO;
 import com.capstone.server.Domain.Article;
 import com.capstone.server.Domain.TbRead;
+import com.capstone.server.Interface.TbReadInterface;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Time;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -126,21 +129,33 @@ class TbReadRepositoryTest {
                 .tbArticleId(6).build();
         article1 = Article.builder()
                 .id(1)
+                .atcTitle("test1")
+                .genre("01")
                 .difficulty("D1").build();
         article2 = Article.builder()
                 .id(2)
-                .difficulty("D1").build();
+                .atcTitle("test2")
+                .genre("01")
+                .difficulty("D2").build();
         article3 = Article.builder()
                 .id(3)
+                .atcTitle("test3")
+                .genre("01")
                 .difficulty("D1").build();
         article4 = Article.builder()
                 .id(4)
-                .difficulty("D2").build();
+                .atcTitle("test4")
+                .genre("01")
+                .difficulty("D1").build();
         article5 = Article.builder()
                 .id(5)
+                .atcTitle("test5")
+                .genre("01")
                 .difficulty("D3").build();
         article6 = Article.builder()
                 .id(6)
+                .atcTitle("test6")
+                .genre("01")
                 .difficulty("D2").build();
     }
 
@@ -160,24 +175,18 @@ class TbReadRepositoryTest {
         articleRepository.save(article6);
 
         Pageable pageable = PageRequest.of(0, 2);
-        Page<TbRead> result_1 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1234", "D1", pageable);
-        Page<TbRead> result_2 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1234", "D2", pageable);
-        Page<TbRead> result_3 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1235", "D2", pageable);
-        Page<TbRead> result_4 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1235", "D3", pageable);
+        Page<TbReadInterface> result_1 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1234", "D1", pageable);
+        Page<TbReadInterface> result_2 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1234", "D2", pageable);
+        Page<TbReadInterface> result_3 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1235", "D2", pageable);
+        Page<TbReadInterface> result_4 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1235", "D3", pageable);
         pageable = PageRequest.of(1,2);
-        Page<TbRead> result_5 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1234", "D1", pageable);
+        Page<TbReadInterface> result_5 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1234", "D1", pageable);
 
         assertThat(result_1.getContent().size()).isEqualTo(2);
-//        assertThat(result_1.getContent().contains(tbRead1)).isTrue();
-//        assertThat(result_1.getContent().contains(tbRead2)).isTrue();
         assertThat(result_5.getContent().size()).isEqualTo(1);
-//        assertThat(result_5.getContent().contains(tbRead3)).isTrue();
         assertThat(result_2.getContent().size()).isEqualTo(1);
-//        assertThat(result_2.getContent().contains(tbRead4)).isTrue();
         assertThat(result_3.getContent().size()).isEqualTo(1);
-//        assertThat(result_3.getContent().contains(tbRead6)).isTrue();
         assertThat(result_4.getContent().size()).isEqualTo(1);
-//        assertThat(result_4.getContent().contains(tbRead5)).isTrue();
     }
 
 }

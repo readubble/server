@@ -9,6 +9,7 @@ import com.capstone.server.DTO.TokenDTO;
 import com.capstone.server.DTO.UserDTO;
 import com.capstone.server.Domain.TbRead;
 import com.capstone.server.Etc.JsonRequestWrapper;
+import com.capstone.server.Interface.TbReadInterface;
 import com.capstone.server.JWT.JwtProperties;
 import com.capstone.server.Service.QuizAnswerService;
 import com.capstone.server.Service.TbReadService;
@@ -153,7 +154,7 @@ public class UserController {
 
     @GetMapping("/users/{id}/problem")
     public ListResultReponseDTO userProblemInfo(@PathVariable("id") String userId, @RequestParam(name="level", required=true) String difficulty, @RequestParam(name="page", required = false, defaultValue = "0") int page, @RequestParam(name="size", required = false, defaultValue = "5") int size){
-        List<TbRead> result = tbReadService.getUserReadInfo(userId, difficulty, page, size);
+        List<TbReadInterface> result = tbReadService.getUserReadInfo(userId, difficulty, page, size);
         return ListResultReponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

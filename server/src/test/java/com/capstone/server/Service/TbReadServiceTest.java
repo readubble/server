@@ -1,6 +1,7 @@
 package com.capstone.server.Service;
 
 import com.capstone.server.Domain.TbRead;
+import com.capstone.server.Interface.TbReadInterface;
 import com.capstone.server.Repository.TbReadRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,25 +38,30 @@ class TbReadServiceTest {
     @Test
     void getUserReadInfo_test(){
         List list = new ArrayList();
-        list.add(TbRead.builder().tbUserId("test1234")
-                .saveFl("Y")
-                .solveFl("Y")
-                .startTime(Time.valueOf("00:11:00"))
-                .finishTime(Time.valueOf("00:12:00"))
-                .totalTime(Time.valueOf("00:01:00"))
-                .inpSmr("")
-                .inpTopic("")
-                .inpKwd1("")
-                .inpKwd2("")
-                .inpKwd3("")
-                .tbArticleId(1).build());
-        Page<TbRead> page = new PageImpl<>(list);
+        TbReadInterface tbReadInterface = new TbReadInterface() {
+            @Override
+            public int getTbArticleId() {
+                return 1;
+            }
+
+            @Override
+            public String getAtcTitle() {
+                return "title1";
+            }
+
+            @Override
+            public String getGenre() {
+                return "01";
+            }
+        };
+        list.add(tbReadInterface);
+        Page<TbReadInterface> page = new PageImpl<>(list);
         when(tbReadRepository.findAllByTbUserIdLEFTJOINArticle(anyString(), anyString(), any()))
                 .thenReturn(page);
 
-        List<TbRead> result = tbReadService.getUserReadInfo("test1234", "D1", 0, 1);
+        List<TbReadInterface> result = tbReadService.getUserReadInfo("test1234", "D1", 0, 1);
 
-        assertThat(result.get(0).getTbUserId()).isEqualTo("test1234");
+        assertThat(result.get(0).getTbArticleId()).isEqualTo(1);
 
     }
 

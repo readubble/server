@@ -4,6 +4,7 @@ import com.capstone.server.DTO.RequestDTO.JoinRequestDTO;
 import com.capstone.server.DTO.UserDTO;
 import com.capstone.server.Domain.TbRead;
 import com.capstone.server.Domain.User;
+import com.capstone.server.Interface.TbReadInterface;
 import com.capstone.server.Repository.UserRepository;
 import com.capstone.server.Service.QuizAnswerService;
 import com.capstone.server.Service.TbReadService;
@@ -167,18 +168,23 @@ class UserControllerTest {
     @WithUserDetails("test123")
     void userProblemInfo_test() throws Exception{
         List list = new ArrayList();
-        list.add(TbRead.builder().tbUserId("test123")
-                .saveFl("Y")
-                .solveFl("Y")
-                .startTime(Time.valueOf("00:11:00"))
-                .finishTime(Time.valueOf("00:12:00"))
-                .totalTime(Time.valueOf("00:01:00"))
-                .inpSmr("")
-                .inpTopic("")
-                .inpKwd1("")
-                .inpKwd2("")
-                .inpKwd3("")
-                .tbArticleId(1).build());
+        TbReadInterface tbReadInterface = new TbReadInterface() {
+            @Override
+            public int getTbArticleId() {
+                return 1;
+            }
+
+            @Override
+            public String getAtcTitle() {
+                return "title1";
+            }
+
+            @Override
+            public String getGenre() {
+                return "01";
+            }
+        };
+        list.add(tbReadInterface);
 
         when(tbReadService.getUserReadInfo(anyString(), anyString(), anyInt(), anyInt()))
                 .thenReturn(list);
@@ -186,7 +192,7 @@ class UserControllerTest {
         mvc.perform(get("/users/test123/problem?level=D1")
                 .header("Authorization", "token"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].tbUserId").value("test123"));
+                .andExpect(jsonPath("$.data[0].atcTitle").value("title1"));
 
 
     }
