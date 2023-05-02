@@ -6,10 +6,7 @@ import com.capstone.server.Domain.TbRead;
 import com.capstone.server.Domain.User;
 import com.capstone.server.Interface.TbReadInterface;
 import com.capstone.server.Repository.UserRepository;
-import com.capstone.server.Service.QuizAnswerService;
-import com.capstone.server.Service.TbReadService;
-import com.capstone.server.Service.TokenService;
-import com.capstone.server.Service.UserService;
+import com.capstone.server.Service.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
@@ -54,6 +51,8 @@ class UserControllerTest {
     QuizAnswerService quizAnswerService;
     @MockBean
     TbReadService tbReadService;
+    @MockBean
+    WordQuizAnswerService wordQuizAnswerService;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -195,6 +194,16 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.data[0].atcTitle").value("title1"));
 
 
+    }
+
+    @Test
+    @WithUserDetails("test123")
+    void userQuizInformation_test() throws Exception {
+        when(wordQuizAnswerService.wordQuizInfo("test123")).thenReturn("TNF");
+        mvc.perform(get("/users/test123/quiz")
+                        .header("Authorization", "token"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.result").value("TNF"));
     }
 
 }

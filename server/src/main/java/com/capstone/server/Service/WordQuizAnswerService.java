@@ -33,10 +33,14 @@ public class WordQuizAnswerService {
         String result="";
         for(int i=0; i<3; i++){
             Optional<WordQuizAnswer> wordQuizAnswer = wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizQuizNo(userId, quiz.get(i).getQuizNo());
-            if(wordQuizAnswer.isPresent() && wordQuizAnswer.get().getCorrectFl().equals("Y")){
-                result+="T";
+            if(wordQuizAnswer.isPresent()){
+                if(wordQuizAnswer.get().getCorrectFl().equals("Y")) {
+                    result += "T";
+                }else{
+                    result+="F";
+                }
             }else{
-                result+="F";
+                result+="N";
             }
         }
         return result;
