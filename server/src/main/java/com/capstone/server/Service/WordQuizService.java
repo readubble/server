@@ -38,7 +38,7 @@ public class WordQuizService {
             for(int j=0; j<quiz_item_items_data.size(); j++) {
                 quiz_item_items.add(quiz_item_items_data.get(i).getItemValue());
             }
-            Optional<WordQuizAnswer> quiz_solved = wordQuizAnswerRepository.findByTbUserIDAndTbQuizQuizNo(userId, wordQuiz.getQuizNo());
+            Optional<WordQuizAnswer> quiz_solved = wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizQuizNo(userId, wordQuiz.getQuizNo());
             if(quiz_solved.isPresent()) {
                 WordQuizResultDTO wordQuizResultDTO = new WordQuizResultDTO(wordQuiz.getQuizNo(),
                         wordQuiz.getQuizQuestion(), quiz_item_items, wordQuiz.getQuizAns(), "Y", quiz_solved.get().getQuizInp());
