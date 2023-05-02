@@ -1,5 +1,6 @@
 package com.capstone.server.DTO;
 
+import com.capstone.server.Domain.TbRead;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,8 +39,8 @@ public class TbReadDTO {
         this.inpSmr = inpSmr;
     }
 
-    public com.capstone.server.Domain.TbRead toEntity(){
-        return com.capstone.server.Domain.TbRead.builder()
+    public TbRead toEntity(){
+        return TbRead.builder()
                 .tbArticleId(tbArticleId)
                 .tbUserId(tbUserId)
                 .saveFl(saveFl)
