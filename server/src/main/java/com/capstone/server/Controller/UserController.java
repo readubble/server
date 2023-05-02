@@ -11,10 +11,7 @@ import com.capstone.server.Domain.TbRead;
 import com.capstone.server.Etc.JsonRequestWrapper;
 import com.capstone.server.Interface.TbReadInterface;
 import com.capstone.server.JWT.JwtProperties;
-import com.capstone.server.Service.QuizAnswerService;
-import com.capstone.server.Service.TbReadService;
-import com.capstone.server.Service.TokenService;
-import com.capstone.server.Service.UserService;
+import com.capstone.server.Service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
@@ -36,13 +33,15 @@ public class UserController {
     private final TokenService tokenService;
     private final QuizAnswerService quizAnswerService;
     private final TbReadService tbReadService;
+    private final WordQuizAnswerService wordQuizAnswerService;
 
     @Autowired
-    public UserController(UserService userService, TokenService tokenService, QuizAnswerService quizAnswerService, TbReadService tbReadService){
+    public UserController(UserService userService, TokenService tokenService, QuizAnswerService quizAnswerService, TbReadService tbReadService, WordQuizAnswerService wordQuizAnswerService){
         this.userService = userService;
         this.tokenService = tokenService;
         this.quizAnswerService = quizAnswerService;
         this.tbReadService = tbReadService;
+        this.wordQuizAnswerService = wordQuizAnswerService;
     }
 
     @PostMapping("/users")
@@ -159,5 +158,16 @@ public class UserController {
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(result).build();
+    }
+
+    @GetMapping("/users/{id}/quiz")
+    public ResultResponseDTO userQuizInformation(@PathVariable("id") String userId){
+        String result = wordQuizAnswerService.wordQuizInfo(userId);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("result", result);
+        return ResultResponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(jsonObject).build();
     }
 }
