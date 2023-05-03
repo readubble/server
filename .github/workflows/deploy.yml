@@ -44,7 +44,13 @@ jobs:
         run: |
           touch ./server/src/main/java/com/capstone/server/JWT/JwtProperties.java
           echo "${{secrets.JWT}}" >./server/src/main/java/com/capstone/server/JWT/JwtProperties.java
-      
+
+      - name: Generate DictKey file
+        if: contains(github.ref, 'main')
+        run: |
+          touch ./server/src/main/java/com/capstone/server/Etc/DictKey.java
+          echo "${{secrets.DictKey}}" >./server/src/main/java/com/capstone/server/Etc/DictKey.java
+
       - name: Gradle Caching
         uses: actions/cache@v3
         with:
