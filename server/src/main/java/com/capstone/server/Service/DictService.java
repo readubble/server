@@ -27,6 +27,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Slf4j
@@ -63,7 +64,7 @@ public class DictService {
         RestTemplate restTemplate = new RestTemplate();
         try{
             ResponseEntity<String> response = restTemplate.exchange(
-                    "https://stdict.korean.go.kr/api/search.do?key="+DictKey.DictKey+"?q="+keyword+"?req_type=json"+"?start="+start+"?num="+num,
+                    "https://stdict.korean.go.kr/api/search.do?key="+DictKey.DictKey+"&q="+keyword+"&req_type=json"+"&start="+start+"&num="+num,
                     HttpMethod.GET,
                     DictRequest,
                     String.class
@@ -103,12 +104,14 @@ public class DictService {
             //total이 커서 재시도 후 정상적으로 값을 받아왔거나, total이 num보다 적은 경우
             //API의 결과값을 그대로 반환해주면 된다.
             Date date = new Date();
-            List<JsonNode> items = jsonNode.get("channel").findValues("item");
-            for(int i=0; i<items.size(); i++){
-                DictDTO dictDTO = new DictDTO(items.get(i).get("target_code").asInt(), items.get(i).get("word").asText(),
-                        items.get(i).get("container").get("definition").asText(), "");
+            //List<JsonNode> items = jsonNode.get("channel").findValues("item");
+            Iterator<JsonNode> items = jsonNode.get("channel").get("item").iterator();
+            while(items.hasNext()){
+                JsonNode tmp = items.next();
+                DictDTO dictDTO = new DictDTO(tmp.get("target_code").asInt(), tmp.get("word").asText(),
+                        tmp.get("sense").get("definition").asText(), "");
                 result.add(dictDTO);
-                Search search = new Search(userId, result.get(i).getWordNo(), "N", date);
+                Search search = new Search(userId, tmp.get("target_code").asInt(), "N", date);
                 searchRepository.save(search);
             }
             return result;

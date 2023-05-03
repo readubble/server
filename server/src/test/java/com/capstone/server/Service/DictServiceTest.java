@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -50,8 +51,9 @@ class DictServiceTest {
     }
 
     @Test
-    void getDictInfo_test(){
-
+    void getDictInfo_test() throws IOException {
+        List<DictDTO> result = dictService.getDictInfo("사과", "test123");
+        assertThat(result.size()).isEqualTo(8);
     }
 
 }
