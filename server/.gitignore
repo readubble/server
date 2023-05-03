@@ -42,3 +42,4 @@ out/
 /src/main/java/com/capstone/server/JWT/JwtProperties.java
 /src/main/resources/application.yml
 /log-**.txt
+/src/main/java/com/capstone/server/Etc/DictKey.java
