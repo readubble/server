@@ -77,6 +77,13 @@ class ArticleRepositoryTest {
     }
 
     @Test
+    void findById_test(){
+
+        articleRepository.save(article1);
+        Article result = articleRepository.findById(1);
+        assertThat(result.getId()).isEqualTo(article1.getId());
+    }
+    @Test
     void findByArticleLEFTJOINTbRead_test(){
         articleRepository.save(article1);
         articleRepository.save(article2);

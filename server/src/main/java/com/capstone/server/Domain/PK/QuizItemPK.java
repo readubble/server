@@ -8,4 +8,5 @@ import java.io.Serializable;
 public class QuizItemPK implements Serializable {
     private int tbQuizTbArticleId;
     private int tbQuizQuizNo;
+    private int itemNo;
 }
