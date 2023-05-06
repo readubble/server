@@ -6,6 +6,7 @@ import com.capstone.server.Domain.TbRead;
 import com.capstone.server.Interface.TbReadInterface;
 import com.capstone.server.Repository.QuizAnswerRepository;
 import com.capstone.server.Repository.TbReadRepository;
+import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,6 +38,8 @@ class TbReadServiceTest {
     TbReadRepository tbReadRepository;
     @Mock
     QuizAnswerRepository quizAnswerRepository;
+    @Mock
+    ArticleService articleService;
     @InjectMocks
     TbReadService tbReadService;
 
@@ -85,6 +88,31 @@ class TbReadServiceTest {
                 .quizResult(List.of("Y","Y","Y")).build(), 1);
         verify(tbReadRepository, times(1)).save(any(TbRead.class));
         verify(quizAnswerRepository,times(3)).save(any(QuizAnswer.class));
+    }
+
+    @Test
+    void getResult_test(){
+        when(tbReadRepository.findByTbUserIdAndTbArticleId("test123", 1))
+                .thenReturn(TbRead.builder()
+                        .tbUserId("test123")
+                        .tbArticleId(1)
+                        .inpKwd1("1")
+                        .inpKwd2("2")
+                        .inpKwd3("3")
+                        .inpTopic("문항1|문항2|문항3")
+                        .inpSmr("요약결과")
+                        .saveFl("N")
+                        .solveFl("Y")
+                        .finishTime(new Time(30000))
+                        .startTime(new Time(10000))
+                        .totalTime(new Time(20000))
+                        .build());
+        when(articleService.getSummarization(1))
+                .thenReturn("ai요약결과");
+        JSONObject jsonObject = tbReadService.getResult(1, "test123");
+        assertThat(jsonObject.get("sentence")).isEqualTo(List.of("문항1", "문항2", "문항3"));
+        assertThat(jsonObject.get("ai-summarization")).isEqualTo("ai요약결과");
+
     }
 
 }

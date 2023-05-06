@@ -189,4 +189,12 @@ class TbReadRepositoryTest {
         assertThat(result_4.getContent().size()).isEqualTo(1);
     }
 
+    @Test
+    void findByTbUserIdAndTbArticleId_test(){
+        tbReadRepository.save(tbRead1);
+        TbRead result = tbReadRepository.findByTbUserIdAndTbArticleId("test1234", 1);
+        assertThat(result.getTbUserId()).isEqualTo("test1234");
+        assertThat(result.getTbArticleId()).isEqualTo(1);
+    }
+
 }

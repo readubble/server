@@ -10,11 +10,13 @@ import com.capstone.server.Repository.QuizAnswerRepository;
 import com.capstone.server.Repository.QuizRepository;
 import com.capstone.server.Repository.TbReadRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -22,10 +24,12 @@ import java.util.List;
 public class TbReadService {
     private final TbReadRepository tbReadRepository;
     private final QuizAnswerRepository quizAnswerRepository;
+    private final ArticleService articleService;
     @Autowired
-    public TbReadService(TbReadRepository tbReadRepository, QuizAnswerRepository quizAnswerRepository){
+    public TbReadService(TbReadRepository tbReadRepository, QuizAnswerRepository quizAnswerRepository, ArticleService articleService){
         this.tbReadRepository = tbReadRepository;
         this.quizAnswerRepository = quizAnswerRepository;
+        this.articleService = articleService;
     }
 
     public List<TbReadInterface> getUserReadInfo(String userId, String difficulty, int page, int size){
@@ -60,6 +64,17 @@ public class TbReadService {
             quizAnswerRepository.save(quizAnswer);
         }
 
+    }
+
+    public JSONObject getResult(int problemId, String userId){
+        TbRead result = tbReadRepository.findByTbUserIdAndTbArticleId(userId, problemId);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("time", result.getTotalTime());
+        jsonObject.put("keyword", List.of(result.getInpKwd1(), result.getInpKwd2(), result.getInpKwd3()));
+        jsonObject.put("sentence", Arrays.asList(result.getInpTopic().split("[|]")));
+        jsonObject.put("summarization", result.getInpSmr());
+        jsonObject.put("ai-summarization", articleService.getSummarization(problemId));
+        return jsonObject;
     }
 
 }
