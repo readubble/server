@@ -163,4 +163,21 @@ class ProblemControllerTest {
 
     }
 
+    @Test
+    @WithUserDetails("test123")
+    public void problemResult_test() throws Exception {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("time", new Time(10000));
+        jsonObject.put("keyword", List.of("문항", "문항", "문항"));
+        jsonObject.put("sentence", List.of("주제문", "주제문", "주제문"));
+        jsonObject.put("summarization", "요약");
+        jsonObject.put("ai-summarization", "ai요약");
+        when(tbReadService.getResult(1, "test123"))
+                .thenReturn(jsonObject);
+
+        mvc.perform(get("/problem/1/users/test123")
+                        .header("Authorization", "token"))
+                .andExpect(status().isOk());
+    }
+
 }

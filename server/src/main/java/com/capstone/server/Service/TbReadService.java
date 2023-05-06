@@ -71,9 +71,9 @@ public class TbReadService {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("time", result.getTotalTime());
         jsonObject.put("keyword", List.of(result.getInpKwd1(), result.getInpKwd2(), result.getInpKwd3()));
-        jsonObject.put("sentence", Arrays.asList(result.getInpTopic().split("|")));
+        jsonObject.put("sentence", Arrays.asList(result.getInpTopic().split("[|]")));
         jsonObject.put("summarization", result.getInpSmr());
-        jsonObject.put("ai-summarization", articleService.article(problemId));
+        jsonObject.put("ai-summarization", articleService.getSummarization(problemId));
         return jsonObject;
     }
 
