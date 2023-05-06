@@ -63,4 +63,13 @@ public class ProblemController {
                 .data(jsonObject).build();
 
     }
+
+    @GetMapping("/problem/{problem_id}/users/{user_id}")
+    public ResultResponseDTO problemResult(@PathVariable("problem_id") int problemId, @PathVariable("user_id") String userId){
+        JSONObject result = tbReadService.getResult(problemId, userId);
+        return ResultResponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(result).build();
+    }
 }
