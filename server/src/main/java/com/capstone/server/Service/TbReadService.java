@@ -44,9 +44,9 @@ public class TbReadService {
                 .totalTime(problemRequestDTO.getTotalTime())
                 .saveFl("")
                 .solveFl("Y")
-                .inpKwd1(problemRequestDTO.getKeyword().get(1))
-                .inpKwd2(problemRequestDTO.getKeyword().get(2))
-                .inpKwd3(problemRequestDTO.getKeyword().get(3))
+                .inpKwd1(problemRequestDTO.getKeyword().get(0))
+                .inpKwd2(problemRequestDTO.getKeyword().get(1))
+                .inpKwd3(problemRequestDTO.getKeyword().get(2))
                 .inpTopic(problemRequestDTO.getSentence())
                 .inpSmr(problemRequestDTO.getSummarization())
                 .build();
