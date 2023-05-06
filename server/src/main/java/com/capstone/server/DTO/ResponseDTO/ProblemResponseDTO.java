@@ -15,7 +15,7 @@ public class ProblemResponseDTO {
 
     @Getter
     @Setter
-    public class Data{
+    public static class Data{
         private JSONObject problem;
         private List quiz;
         @Builder

@@ -20,6 +20,7 @@ public class QuizItem {
     private int tbQuizTbArticleId;
     @Id
     private int tbQuizQuizNo;
+    @Id
     private int itemNo;
     private String itemValue;
 

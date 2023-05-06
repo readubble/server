@@ -48,7 +48,7 @@ public class ArticleService {
             Matcher matcher = pattern.matcher(articleArr[i]);
             List tmp_list = new ArrayList<>();
             while(matcher.find()){
-                tmp_list.add(List.of(matcher.group()));
+                tmp_list.add(matcher.group());
             }
             result.add(tmp_list);
         }
