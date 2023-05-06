@@ -63,4 +63,9 @@ public class ArticleService {
         return jsonObject;
 
     }
+
+    public String getSummarization(int id){
+        Article article = articleRepository.findById(id);
+        return article.getAnsSmr();
+    }
 }
