@@ -1,7 +1,10 @@
 package com.capstone.server.Service;
 
+import com.capstone.server.DTO.RequestDTO.ProblemRequestDTO;
+import com.capstone.server.Domain.QuizAnswer;
 import com.capstone.server.Domain.TbRead;
 import com.capstone.server.Interface.TbReadInterface;
+import com.capstone.server.Repository.QuizAnswerRepository;
 import com.capstone.server.Repository.TbReadRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +27,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +35,8 @@ import static org.mockito.Mockito.when;
 class TbReadServiceTest {
     @Mock
     TbReadRepository tbReadRepository;
+    @Mock
+    QuizAnswerRepository quizAnswerRepository;
     @InjectMocks
     TbReadService tbReadService;
 
@@ -63,6 +68,23 @@ class TbReadServiceTest {
 
         assertThat(result.get(0).getTbArticleId()).isEqualTo(1);
 
+    }
+
+    @Test
+    void save_test(){
+        tbReadService.save(ProblemRequestDTO
+                .builder()
+                .userId("test123")
+                .keyword(List.of("1","2","3"))
+                .sentence("문장|문장|문장")
+                .startTime(new Time(20000))
+                .finishTime(new Time(30000))
+                .totalTime(new Time(10000))
+                .quizId(List.of(1,2,3))
+                .quizChoice(List.of(1,2,3))
+                .quizResult(List.of("Y","Y","Y")).build(), 1);
+        verify(tbReadRepository, times(1)).save(any(TbRead.class));
+        verify(quizAnswerRepository,times(3)).save(any(QuizAnswer.class));
     }
 
 }

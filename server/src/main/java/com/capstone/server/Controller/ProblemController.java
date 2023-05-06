@@ -1,20 +1,19 @@
 package com.capstone.server.Controller;
 
+import com.capstone.server.DTO.RequestDTO.ProblemRequestDTO;
 import com.capstone.server.DTO.ResponseDTO.ListResultReponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ProblemResponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResultResponseDTO;
 import com.capstone.server.Interface.ArticleInterface;
 import com.capstone.server.Service.ArticleService;
 import com.capstone.server.Service.QuizService;
+import com.capstone.server.Service.TbReadService;
 import com.capstone.server.Service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,10 +22,12 @@ import java.util.List;
 public class ProblemController {
     private final ArticleService articleService;
     private final QuizService quizService;
+    private final TbReadService tbReadService;
     @Autowired
-    public ProblemController(ArticleService articleService, QuizService quizService){
+    public ProblemController(ArticleService articleService, QuizService quizService, TbReadService tbReadService){
         this.articleService = articleService;
         this.quizService = quizService;
+        this.tbReadService = tbReadService;
     }
 
     @GetMapping("/problem/users/{id}")
@@ -48,5 +49,18 @@ public class ProblemController {
                 .data(ProblemResponseDTO.Data.builder()
                         .problem(problem)
                         .quiz(quiz).build()).build();
+    }
+
+    @PostMapping("/problem/{id}")
+    public ResultResponseDTO problemSolve(@PathVariable("id") int id, @RequestBody ProblemRequestDTO problemRequestDTO){
+        tbReadService.save(problemRequestDTO, id);
+        String summarization = articleService.getSummarization(id);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("ai_summarization", summarization);
+        return ResultResponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(jsonObject).build();
+
     }
 }
