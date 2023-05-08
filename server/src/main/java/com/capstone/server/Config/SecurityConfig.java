@@ -51,7 +51,7 @@ public class SecurityConfig {
                 .addFilterBefore(new CustomFilter(), UsernamePasswordAuthenticationFilter.class)
                 .apply(new CustomDsl())
                 .and()
-                .authorizeRequests(authorize -> authorize.antMatchers("/", "/users", "/users/social/verify", "/users/authorize", "/users/id/**", "/users/**/temporary-password/**", "/users/**/quiz", "/users/email/**", "/users/mobile/**", "/users/nickname/**", "/swagger-ui/**", "/v3/api-docs/**", "/users/authorize/token", "/search", "/search/**", "/promotions", "/users/**/profile").permitAll()
+                .authorizeRequests(authorize -> authorize.antMatchers("/", "/users", "/users/authorize", "/swagger-ui/**", "/v3/api-docs/**", "/users/authorize/token").permitAll()
                         .anyRequest().hasRole("USER"))
                 .exceptionHandling()
                 .accessDeniedHandler(new CustomAccessDeniedHandler())
