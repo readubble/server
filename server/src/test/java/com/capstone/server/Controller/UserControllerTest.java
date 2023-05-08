@@ -1,5 +1,6 @@
 package com.capstone.server.Controller;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.capstone.server.DTO.RequestDTO.JoinRequestDTO;
 import com.capstone.server.DTO.UserDTO;
 import com.capstone.server.Domain.TbRead;
@@ -16,12 +17,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 
+import java.io.FileInputStream;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,8 +36,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -204,6 +208,22 @@ class UserControllerTest {
                         .header("Authorization", "token"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.result").value("TNF"));
+    }
+
+    @Test
+    @WithUserDetails("test123")
+    void profile_test() throws Exception{
+        MockMultipartFile multipartFile = new MockMultipartFile(
+                "files", "44036562.png", "image/png", new FileInputStream("src/main/resources/tmp/44036562.png")
+        );
+        when(userService.uploadFile("test123", multipartFile)).thenReturn("http://url.com");
+
+        mvc.perform(
+                multipart("/users/test123/profile")
+                        .file(multipartFile)
+        ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.url").isNotEmpty());
+
     }
 
 }

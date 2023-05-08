@@ -18,6 +18,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -169,5 +170,17 @@ public class UserController {
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(jsonObject).build();
+    }
+
+    @PostMapping("/users/{id}/profile")
+    public ResultResponseDTO profile(@PathVariable("id") String id, @RequestPart(value="file") MultipartFile file){
+        String url = userService.uploadFile(id, file);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("url", url);
+        return ResultResponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(jsonObject).build();
+
     }
 }
