@@ -173,7 +173,7 @@ public class UserController {
     }
 
     @PostMapping("/users/{id}/profile")
-    public ResultResponseDTO profile(@PathVariable("id") String id, @RequestPart MultipartFile file){
+    public ResultResponseDTO profile(@PathVariable("id") String id, @RequestPart(value="file") MultipartFile file){
         String url = userService.uploadFile(id, file);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("url", url);

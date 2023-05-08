@@ -7,6 +7,7 @@ import com.capstone.server.DTO.RequestDTO.LoginRequestDTO;
 import com.capstone.server.Etc.JsonRequestWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,10 +29,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+
         try {
             ObjectMapper om = new ObjectMapper();
+
             JsonRequestWrapper jrw = new JsonRequestWrapper((HttpServletRequest) request);
             LoginRequestDTO user = om.readValue(jrw.getBody(), LoginRequestDTO.class);
+
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getId(), user.getPassword());
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             return authentication;

@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AWSS3Config {
 
-    @Value("${spring.s3.access-key}")
+    @Value("${spring.s3.accessKey}")
     private String accessKey;
 
-    @Value("${spring.s3.secret-key}")
+    @Value("${spring.s3.secretKey}")
     private String secretKey;
 
     @Value("${cloud.aws.region.static}")

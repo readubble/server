@@ -32,7 +32,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final TokenService tokenService;
     private PasswordEncoder bCryptPasswordEncoder;
-    @Value("${spring.s3.bucket")
+    @Value("${spring.s3.bucket}")
     private String bucketName;
     private final AmazonS3Client amazonS3Client;
     @Autowired
@@ -96,18 +96,25 @@ public class UserService {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getSize());
         objectMetadata.setContentType(file.getContentType());
-        try{
-            InputStream inputStream = file.getInputStream();
+        String uploadFileUrl = "";
+        try(InputStream inputStream = file.getInputStream()){
             String keyName = "profile/"+UUID.randomUUID().toString()+"."+file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".")+1);
             amazonS3Client.putObject(
                     new PutObjectRequest(bucketName, keyName, inputStream, objectMetadata)
                             .withCannedAcl(CannedAccessControlList.PublicRead)
             );
-            String uploadFileUrl = amazonS3Client.getUrl(bucketName, keyName).toString();
-            return uploadFileUrl;
+            uploadFileUrl = amazonS3Client.getUrl(bucketName, keyName).toString();
+            User user = userRepository.findById(id).get();
+            UserDTO userDTO = new UserDTO();
+            userDTO = userDTO.fromEntity(user);
+            userDTO.setUserPhotoIn(uploadFileUrl);
+            userRepository.save(userDTO.toEntity());
+
         }catch(IOException e){
             throw new ApiException(ExceptionEnum.BAD_REQUEST);
         }
+
+        return uploadFileUrl;
 
     }
 
