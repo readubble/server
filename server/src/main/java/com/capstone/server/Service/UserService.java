@@ -1,5 +1,9 @@
 package com.capstone.server.Service;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.capstone.server.DTO.RequestDTO.JoinRequestDTO;
 import com.capstone.server.DTO.TokenDTO;
 import com.capstone.server.DTO.UserDTO;
@@ -9,13 +13,18 @@ import com.capstone.server.Exception.ExceptionEnum;
 import com.capstone.server.Repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -23,11 +32,15 @@ public class UserService {
     private final UserRepository userRepository;
     private final TokenService tokenService;
     private PasswordEncoder bCryptPasswordEncoder;
+    @Value("${spring.s3.bucket")
+    private String bucketName;
+    private final AmazonS3Client amazonS3Client;
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder bCryptPasswordEncoder, TokenService tokenService){
+    public UserService(UserRepository userRepository, PasswordEncoder bCryptPasswordEncoder, TokenService tokenService, AmazonS3Client amazonS3Client){
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.tokenService = tokenService;
+        this.amazonS3Client = amazonS3Client;
     }
 
     public void join(JoinRequestDTO user){
@@ -77,6 +90,25 @@ public class UserService {
         }else{
             throw new ApiException(ExceptionEnum.BAD_REQUEST);
         }
+    }
+
+    public String uploadFile(String id, MultipartFile file){
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(file.getSize());
+        objectMetadata.setContentType(file.getContentType());
+        try{
+            InputStream inputStream = file.getInputStream();
+            String keyName = "profile/"+UUID.randomUUID().toString()+"."+file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".")+1);
+            amazonS3Client.putObject(
+                    new PutObjectRequest(bucketName, keyName, inputStream, objectMetadata)
+                            .withCannedAcl(CannedAccessControlList.PublicRead)
+            );
+            String uploadFileUrl = amazonS3Client.getUrl(bucketName, keyName).toString();
+            return uploadFileUrl;
+        }catch(IOException e){
+            throw new ApiException(ExceptionEnum.BAD_REQUEST);
+        }
+
     }
 
 }
