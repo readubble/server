@@ -214,7 +214,7 @@ class UserControllerTest {
     @WithUserDetails("test123")
     void profile_test() throws Exception{
         MockMultipartFile multipartFile = new MockMultipartFile(
-                "files", "44036562.png", "image/png", new FileInputStream("src/main/resources/tmp/44036562.png")
+                "file", "44036562.png", "image/png", new FileInputStream("src/main/resources/tmp/44036562.png")
         );
         when(userService.uploadFile("test123", multipartFile)).thenReturn("http://url.com");
 

@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -28,14 +28,14 @@ class QuizItemRepositoryTest {
     @BeforeAll
     static void setup(){
         quizItem1 = QuizItem.builder()
-                .tbQuizTbArticleId(1)
-                .tbQuizQuizNo(1)
+                .tbArticleId(1)
+                .tbQuizNo(1)
                 .itemValue("항목1")
                 .itemNo(1)
                 .build();
         quizItem2 = QuizItem.builder()
-                .tbQuizTbArticleId(1)
-                .tbQuizQuizNo(1)
+                .tbArticleId(1)
+                .tbQuizNo(1)
                 .itemValue("항목2")
                 .itemNo(2)
                 .build();
@@ -43,10 +43,10 @@ class QuizItemRepositoryTest {
     }
 
     @Test
-    void findAllByTbQuizQuizNo_test(){
+    void findAllByTbQuizNo_test(){
         quizItemRepository.save(quizItem1);
         quizItemRepository.save(quizItem2);
-        List<QuizItem> result = quizItemRepository.findAllByTbQuizQuizNo(1);
+        List<QuizItem> result = quizItemRepository.findAllByTbQuizNo(1);
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0).getItemValue()).isEqualTo("항목1");
     }

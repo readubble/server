@@ -17,14 +17,14 @@ import javax.persistence.IdClass;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class WordQuizItem {
     @Id
-    private int tbWordQuizQuizNo;
+    private int wordQuizNo;
     @Id
     private int itemNo;
     private String itemValue;
 
     @Builder
-    public WordQuizItem(int tbWordQuizQuizNo, int itemNo, String itemValue) {
-        this.tbWordQuizQuizNo = tbWordQuizQuizNo;
+    public WordQuizItem(int wordQuizNo, int itemNo, String itemValue) {
+        this.wordQuizNo = wordQuizNo;
         this.itemNo = itemNo;
         this.itemValue = itemValue;
     }

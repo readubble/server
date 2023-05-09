@@ -55,8 +55,8 @@ class WordControllerTest {
                 .userExp(0)
                 .userPhotoIn("")
                 .role("ROLE_USER").build());
-        dict1 = new DictDTO(1, "사과", "살이 연하고 달며 물이 많은 참외", "사과를 먹다");
-        dict2 = new DictDTO(2, "사과", "조선 시대에, 오위에 둔 정육품의 군직. 현직에 종사하고 있찌 않은 문관, 무관 및 음관이 맡았다.", "");
+        dict1 = new DictDTO(1, "사과", "살이 연하고 달며 물이 많은 참외");
+        dict2 = new DictDTO(2, "사과", "조선 시대에, 오위에 둔 정육품의 군직. 현직에 종사하고 있찌 않은 문관, 무관 및 음관이 맡았다.");
 
     }
 

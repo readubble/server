@@ -13,7 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -38,7 +37,7 @@ class WordQuizItemRepositoryTest {
         wordQuizItem3_2 = new WordQuizItem(3,2, "금요일");
     }
     @Test
-    void findAllByTbWordQuizQuizNo_test(){
+    void findAllByWordQuizNo_test(){
         wordQuizItemRepository.save(wordQuizItem1_1);
         wordQuizItemRepository.save(wordQuizItem1_2);
         wordQuizItemRepository.save(wordQuizItem2_1);
@@ -46,9 +45,9 @@ class WordQuizItemRepositoryTest {
         wordQuizItemRepository.save(wordQuizItem3_1);
         wordQuizItemRepository.save(wordQuizItem3_2);
 
-        List<WordQuizItem> result_1 = wordQuizItemRepository.findAllByTbWordQuizQuizNo(1);
+        List<WordQuizItem> result_1 = wordQuizItemRepository.findAllByWordQuizNo(1);
         assertThat(result_1.size()).isEqualTo(2);
-        assertThat(result_1.get(0).getTbWordQuizQuizNo()).isEqualTo(1);
+        assertThat(result_1.get(0).getWordQuizNo()).isEqualTo(1);
         assertThat(result_1.get(0).getItemValue()).isEqualTo("3일");
     }
 

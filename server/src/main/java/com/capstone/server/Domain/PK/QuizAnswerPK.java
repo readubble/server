@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 @Data
 public class QuizAnswerPK implements Serializable {
-    private int tbQuizTbArticleId;
-    private int tbQuizQuizNo;
+    private int tbArticleId;
+    private int tbQuizNo;
     private String tbUserId;
 }

@@ -5,31 +5,29 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Id;
-
 @Getter
 @Setter
 public class WordQuizItemDTO {
-    private int tbWordQuizQuizNo;
+    private int wordQuizNo;
     private int itemNo;
     private String itemValue;
 
     @Builder
-    public WordQuizItemDTO(int tbWordQuizQuizNo, int itemNo, String itemValue) {
-        this.tbWordQuizQuizNo = tbWordQuizQuizNo;
+    public WordQuizItemDTO(int wordQuizNo, int itemNo, String itemValue) {
+        this.wordQuizNo = wordQuizNo;
         this.itemNo = itemNo;
         this.itemValue = itemValue;
     }
 
     public WordQuizItem toEntity(){
         return WordQuizItem.builder()
-                .tbWordQuizQuizNo(tbWordQuizQuizNo)
+                .wordQuizNo(wordQuizNo)
                 .itemNo(itemNo)
                 .itemValue(itemValue).build();
     }
     public WordQuizItemDTO fromEntity(WordQuizItem wordQuizItem){
         return WordQuizItemDTO.builder()
-                .tbWordQuizQuizNo(wordQuizItem.getTbWordQuizQuizNo())
+                .wordQuizNo(wordQuizItem.getWordQuizNo())
                 .itemNo(wordQuizItem.getItemNo())
                 .itemValue(wordQuizItem.getItemValue()).build();
     }

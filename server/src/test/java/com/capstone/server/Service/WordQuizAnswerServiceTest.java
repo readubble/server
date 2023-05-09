@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,11 +56,11 @@ class WordQuizAnswerServiceTest {
 
     @Test
     void wordQuizInfo_test(){
-        when(wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizQuizNo("test1234", 1))
+        when(wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizNo("test1234", 1))
                 .thenReturn(Optional.of(wordQuizAnswer1));
-        when(wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizQuizNo("test1234",2))
+        when(wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizNo("test1234",2))
                 .thenReturn(Optional.empty());
-        when(wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizQuizNo("test1234",3))
+        when(wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizNo("test1234",3))
                 .thenReturn(Optional.of(wordQuizAnswer3));
         when(wordQuizRepository.findTop3By())
                 .thenReturn(List.of(wordQuiz1, wordQuiz2, wordQuiz3));

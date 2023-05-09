@@ -6,6 +6,6 @@ import java.io.Serializable;
 
 @Data
 public class SearchPK implements Serializable {
-    private String UserId;
-    private String DictWordNo;
+    private String tbUserId;
+    private String tbDictWordNo;
 }

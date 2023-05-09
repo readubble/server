@@ -7,5 +7,5 @@ import java.io.Serializable;
 @Data
 public class WordQuizAnswerPK implements Serializable {
     String tbUserId;
-    int tbWordQuizQuizNo;
+    int tbWordQuizNo;
 }

@@ -3,6 +3,7 @@ package com.capstone.server.Service;
 import com.capstone.server.Domain.Article;
 import com.capstone.server.Interface.ArticleInterface;
 import com.capstone.server.Repository.ArticleRepository;
+import com.google.type.DateTime;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -89,7 +91,7 @@ class ArticleServiceTest {
                         .difficulty("D1")
                         .genre("예술")
                         .atcTitle("브람스 교향곡 4번")
-                        .regDt("")
+                        .regDt(new Date())
                         .cgId(1).build());
         JSONObject result = articleService.article(1);
         assertThat(result.get("content")).isEqualTo(List.of(
@@ -118,7 +120,7 @@ class ArticleServiceTest {
                         .difficulty("D1")
                         .genre("예술")
                         .atcTitle("브람스 교향곡 4번")
-                        .regDt("")
+                        .regDt(new Date())
                         .cgId(1).build());
         String keyword = articleService.getSummarization(1);
         assertThat(keyword).isEqualTo("요약결과");

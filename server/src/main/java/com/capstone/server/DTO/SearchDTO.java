@@ -5,38 +5,37 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Id;
 import java.util.Date;
 
 @Getter
 @Setter
 public class SearchDTO {
-    private String UserId;
-    private int DictWordNo;
+    private String tbUserId;
+    private int tbDictWordNo;
     private String saveFl;
     private Date searchDt;
 
 
     @Builder
-    public SearchDTO(String userId, int dictWordNo, String saveFl, Date searchDt) {
-        UserId = userId;
-        DictWordNo = dictWordNo;
+    public SearchDTO(String tbUserId, int tbDictWordNo, String saveFl, Date searchDt) {
+        this.tbUserId = tbUserId;
+        this.tbDictWordNo = tbDictWordNo;
         this.saveFl = saveFl;
         this.searchDt = searchDt;
     }
 
     public Search toEntity(){
         return Search.builder()
-                .userId(UserId)
+                .tbUserId(tbUserId)
                 .saveFl(saveFl)
                 .searchDt(searchDt)
-                .dictWordNo(DictWordNo).build();
+                .tbDictWordNo(tbDictWordNo).build();
     }
     public SearchDTO fromEntity(Search search){
         return SearchDTO.builder()
-                .userId(search.getUserId())
+                .tbUserId(search.getTbUserId())
                 .saveFl(search.getSaveFl())
                 .searchDt(search.getSearchDt())
-                .dictWordNo(search.getDictWordNo()).build();
+                .tbDictWordNo(search.getTbDictWordNo()).build();
     }
 }

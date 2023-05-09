@@ -56,7 +56,7 @@ public class DictService {
         }
     }
 
-    private Response getDictApi(String keyword, int start, int num) throws IOException{
+    private Response getDictApi(String keyword, int start, int num){
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
 
@@ -70,7 +70,7 @@ public class DictService {
                     String.class
             );
             return new Response(true, response);
-        }catch (HttpClientErrorException e){
+        }catch (Exception e){
             return new Response(false);
             //db에서 받아오기
         }
@@ -109,7 +109,7 @@ public class DictService {
             while(items.hasNext()){
                 JsonNode tmp = items.next();
                 DictDTO dictDTO = new DictDTO(tmp.get("target_code").asInt(), tmp.get("word").asText(),
-                        tmp.get("sense").get("definition").asText(), "");
+                        tmp.get("sense").get("definition").asText());
                 result.add(dictDTO);
                 Search search = new Search(userId, tmp.get("target_code").asInt(), "N", date);
                 searchRepository.save(search);

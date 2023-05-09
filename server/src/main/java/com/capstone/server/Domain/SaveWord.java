@@ -15,15 +15,15 @@ import javax.persistence.Id;
 public class SaveWord {
     @Id
     private int saveNo;
-    private String userId;
-    private int fkTbWordNo;
+    private String tbUserId;
+    private int tbWordNo;
     private String wordNm;
 
     @Builder
-    public SaveWord(int saveNo, String userId, int fkTbWordNo, String wordNm) {
+    public SaveWord(int saveNo, String tbUserId, int tbWordNo, String wordNm) {
         this.saveNo = saveNo;
-        this.userId = userId;
-        this.fkTbWordNo = fkTbWordNo;
+        this.tbUserId = tbUserId;
+        this.tbWordNo = tbWordNo;
         this.wordNm = wordNm;
     }
 }

@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface WordQuizAnswerRepository extends JpaRepository<WordQuizAnswer, String> {
-    Optional<WordQuizAnswer> findByTbUserIdAndTbWordQuizQuizNo(String tbUserId, int tbWordQuizQuizNo);
+    Optional<WordQuizAnswer> findByTbUserIdAndTbWordQuizNo(String tbUserId, int tbWordQuizNo);
 
 }

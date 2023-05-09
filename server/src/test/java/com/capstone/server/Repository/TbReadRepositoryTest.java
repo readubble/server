@@ -131,32 +131,32 @@ class TbReadRepositoryTest {
                 .id(1)
                 .atcTitle("test1")
                 .genre("01")
-                .difficulty("D1").build();
+                .difficulty("1").build();
         article2 = Article.builder()
                 .id(2)
                 .atcTitle("test2")
                 .genre("01")
-                .difficulty("D2").build();
+                .difficulty("2").build();
         article3 = Article.builder()
                 .id(3)
                 .atcTitle("test3")
                 .genre("01")
-                .difficulty("D1").build();
+                .difficulty("1").build();
         article4 = Article.builder()
                 .id(4)
                 .atcTitle("test4")
                 .genre("01")
-                .difficulty("D1").build();
+                .difficulty("1").build();
         article5 = Article.builder()
                 .id(5)
                 .atcTitle("test5")
                 .genre("01")
-                .difficulty("D3").build();
+                .difficulty("3").build();
         article6 = Article.builder()
                 .id(6)
                 .atcTitle("test6")
                 .genre("01")
-                .difficulty("D2").build();
+                .difficulty("2").build();
     }
 
     @Test
@@ -175,12 +175,12 @@ class TbReadRepositoryTest {
         articleRepository.save(article6);
 
         Pageable pageable = PageRequest.of(0, 2);
-        Page<TbReadInterface> result_1 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1234", "D1", pageable);
-        Page<TbReadInterface> result_2 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1234", "D2", pageable);
-        Page<TbReadInterface> result_3 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1235", "D2", pageable);
-        Page<TbReadInterface> result_4 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1235", "D3", pageable);
+        Page<TbReadInterface> result_1 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1234", "1", pageable);
+        Page<TbReadInterface> result_2 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1234", "2", pageable);
+        Page<TbReadInterface> result_3 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1235", "2", pageable);
+        Page<TbReadInterface> result_4 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1235", "3", pageable);
         pageable = PageRequest.of(1,2);
-        Page<TbReadInterface> result_5 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1234", "D1", pageable);
+        Page<TbReadInterface> result_5 = tbReadRepository.findAllByTbUserIdLEFTJOINArticle("test1234", "1", pageable);
 
         assertThat(result_1.getContent().size()).isEqualTo(2);
         assertThat(result_5.getContent().size()).isEqualTo(1);

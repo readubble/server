@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -18,14 +19,15 @@ public class WordQuizAnswer {
     @Id
     private String tbUserId;
     @Id
-    private int tbWordQuizQuizNo;
+    private int tbWordQuizNo;
     private int quizInp;
+    @Column(columnDefinition = "char")
     private String correctFl;
 
     @Builder
-    public WordQuizAnswer(String tbUserId, int tbWordQuizQuizNo, int quizInp, String correctFl) {
+    public WordQuizAnswer(String tbUserId, int tbWordQuizNo, int quizInp, String correctFl) {
         this.tbUserId = tbUserId;
-        this.tbWordQuizQuizNo = tbWordQuizQuizNo;
+        this.tbWordQuizNo = tbWordQuizNo;
         this.quizInp = quizInp;
         this.correctFl = correctFl;
     }

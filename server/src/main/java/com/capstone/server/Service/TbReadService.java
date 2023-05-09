@@ -57,8 +57,8 @@ public class TbReadService {
         tbReadRepository.save(tbRead);
         for(int i=0; i<problemRequestDTO.getQuizChoice().size(); i++){
             QuizAnswer quizAnswer = QuizAnswer.builder()
-                    .tbQuizTbArticleId(id)
-                    .tbQuizQuizNo(problemRequestDTO.getQuizId().get(i))
+                    .tbArticleId(id)
+                    .tbQuizNo(problemRequestDTO.getQuizId().get(i))
                     .quizInp(problemRequestDTO.getQuizChoice().get(i))
                     .correctFl(problemRequestDTO.getQuizResult().get(i)).build();
             quizAnswerRepository.save(quizAnswer);

@@ -39,43 +39,43 @@ class QuizAnswerRepositoryTest {
         quizAnswer1 = QuizAnswer.builder()
                 .tbUserId("1234")
                 .correctFl("True")
-                .tbQuizTbArticleId(1)
-                .tbQuizQuizNo(1)
+                .tbArticleId(1)
+                .tbQuizNo(1)
                 .quizInp(1)
                 .correctFl("Y").build();
         quizAnswer2 = QuizAnswer.builder()
                 .tbUserId("1234")
                 .correctFl("True")
-                .tbQuizTbArticleId(1)
-                .tbQuizQuizNo(2)
+                .tbArticleId(1)
+                .tbQuizNo(2)
                 .quizInp(1)
                 .correctFl("Y").build();
         quizAnswer3 = QuizAnswer.builder()
                 .tbUserId("1234")
                 .correctFl("True")
-                .tbQuizTbArticleId(1)
-                .tbQuizQuizNo(3)
+                .tbArticleId(1)
+                .tbQuizNo(3)
                 .quizInp(1)
                 .correctFl("N").build();
         quizAnswer4 = QuizAnswer.builder()
                 .tbUserId("1234")
                 .correctFl("True")
-                .tbQuizTbArticleId(2)
-                .tbQuizQuizNo(1)
+                .tbArticleId(2)
+                .tbQuizNo(1)
                 .quizInp(1)
                 .correctFl("Y").build();
         quizAnswer5 = QuizAnswer.builder()
                 .tbUserId("1234")
                 .correctFl("True")
-                .tbQuizTbArticleId(2)
-                .tbQuizQuizNo(2)
+                .tbArticleId(2)
+                .tbQuizNo(2)
                 .quizInp(1)
                 .correctFl("N").build();
         article1 = Article.builder()
                 .id(1)
-                .difficulty("D1").build();
+                .difficulty("1").build();
         article2 = Article.builder()
-                .id(2).difficulty("D2").build();
+                .id(2).difficulty("2").build();
 
     }
 
@@ -102,7 +102,7 @@ class QuizAnswerRepositoryTest {
         articleRepository.save(article1);
         articleRepository.save(article2);
 
-        int result = quizAnswerRepository.countAllByCorrectFlIsAndTbUserIdJoinArticle("Y", "D1");
+        int result = quizAnswerRepository.countAllByCorrectFlIsAndTbUserIdJoinArticle("Y", "1");
         assertThat(result).isEqualTo(2);
     }
 

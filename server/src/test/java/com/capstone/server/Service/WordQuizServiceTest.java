@@ -73,12 +73,12 @@ class WordQuizServiceTest {
         wqa1_result.add(wordQuizItem2_1); wqa1_result.add(wordQuizItem2_2);
         List<WordQuizItem> wqa3_result = new ArrayList<>();
         wqa1_result.add(wordQuizItem3_1); wqa1_result.add(wordQuizItem3_2);
-        when(wordQuizItemRepository.findAllByTbWordQuizQuizNo(1)).thenReturn(wqa1_result);
-        when(wordQuizItemRepository.findAllByTbWordQuizQuizNo(2)).thenReturn(wqa2_result);
-        when(wordQuizItemRepository.findAllByTbWordQuizQuizNo(3)).thenReturn(wqa3_result);
-        when(wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizQuizNo("test123", 1)).thenReturn(Optional.of(wordQuizAnswer1));
-        when(wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizQuizNo("test123", 2)).thenReturn(Optional.empty());
-        when(wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizQuizNo("test123",3)).thenReturn(Optional.of(wordQuizAnswer3));
+        when(wordQuizItemRepository.findAllByWordQuizNo(1)).thenReturn(wqa1_result);
+        when(wordQuizItemRepository.findAllByWordQuizNo(2)).thenReturn(wqa2_result);
+        when(wordQuizItemRepository.findAllByWordQuizNo(3)).thenReturn(wqa3_result);
+        when(wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizNo("test123", 1)).thenReturn(Optional.of(wordQuizAnswer1));
+        when(wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizNo("test123", 2)).thenReturn(Optional.empty());
+        when(wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizNo("test123",3)).thenReturn(Optional.of(wordQuizAnswer3));
 
         List<WordQuizResultDTO> result = wordQuizService.wordQuizList("test123");
 

@@ -17,17 +17,17 @@ import javax.persistence.IdClass;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class QuizItem {
     @Id
-    private int tbQuizTbArticleId;
+    private int tbArticleId;
     @Id
-    private int tbQuizQuizNo;
+    private int tbQuizNo;
     @Id
     private int itemNo;
     private String itemValue;
 
     @Builder
-    public QuizItem(int tbQuizTbArticleId, int tbQuizQuizNo, int itemNo, String itemValue) {
-        this.tbQuizTbArticleId = tbQuizTbArticleId;
-        this.tbQuizQuizNo = tbQuizQuizNo;
+    public QuizItem(int tbArticleId, int tbQuizNo, int itemNo, String itemValue) {
+        this.tbArticleId = tbArticleId;
+        this.tbQuizNo = tbQuizNo;
         this.itemNo = itemNo;
         this.itemValue = itemValue;
     }

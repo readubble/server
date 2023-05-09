@@ -1,9 +1,12 @@
 package com.capstone.server.DTO;
 
 import com.capstone.server.Domain.Article;
+import com.google.type.DateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Date;
 
 @Getter
 @Setter
@@ -14,12 +17,12 @@ public class ArticleDTO {
     private String atcPhotoIn;
     private String atcText;
     private String difficulty;
-    private String regDt;
+    private Date regDt;
     private int cgId;
     private String genre;
 
     @Builder
-    public ArticleDTO(int id, String atcTitle, String atcWriter, String atcPhotoIn, String atcText, String difficulty, String regDt, int cgId, String genre) {
+    public ArticleDTO(int id, String atcTitle, String atcWriter, String atcPhotoIn, String atcText, String difficulty, Date regDt, int cgId, String genre) {
         this.id = id;
         this.atcTitle = atcTitle;
         this.atcWriter = atcWriter;

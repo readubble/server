@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface QuizItemRepository extends JpaRepository<QuizItem, String> {
-    List<QuizItem> findAllByTbQuizQuizNo(int tbQuizQuizNo);
+    List<QuizItem> findAllByTbQuizNo(int tbQuizNo);
 }

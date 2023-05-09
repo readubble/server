@@ -17,13 +17,11 @@ public class Dict {
     private int wordNo;
     private String wordNm;
     private String wordMean;
-    private String wordEx;
 
     @Builder
-    public Dict(int wordNo, String wordNm, String wordMean, String wordEx) {
+    public Dict(int wordNo, String wordNm, String wordMean) {
         this.wordNo = wordNo;
         this.wordNm = wordNm;
         this.wordMean = wordMean;
-        this.wordEx = wordEx;
     }
 }

@@ -32,7 +32,7 @@ public class WordQuizAnswerService {
         List<WordQuiz> quiz = wordQuizRepository.findTop3By();
         String result="";
         for(int i=0; i<3; i++){
-            Optional<WordQuizAnswer> wordQuizAnswer = wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizQuizNo(userId, quiz.get(i).getQuizNo());
+            Optional<WordQuizAnswer> wordQuizAnswer = wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizNo(userId, quiz.get(i).getQuizNo());
             if(wordQuizAnswer.isPresent()){
                 if(wordQuizAnswer.get().getCorrectFl().equals("Y")) {
                     result += "T";

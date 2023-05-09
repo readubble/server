@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface WordQuizItemRepository extends JpaRepository<WordQuizItem, String> {
-    List<WordQuizItem> findAllByTbWordQuizQuizNo(int tbWordQuizQuizNo);
+    List<WordQuizItem> findAllByWordQuizNo(int wordQuizNo);
 }

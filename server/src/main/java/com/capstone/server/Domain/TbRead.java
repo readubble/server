@@ -7,9 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.*;
 import java.sql.Time;
 
 @Entity
@@ -21,7 +19,9 @@ public class TbRead {
     private String tbUserId;
     @Id
     private int tbArticleId;
+    @Column(columnDefinition = "char")
     private String saveFl;
+    @Column(columnDefinition = "char")
     private String solveFl;
     private Time startTime;
     private Time finishTime;

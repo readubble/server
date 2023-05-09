@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -17,16 +18,17 @@ import java.util.Date;
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class Search {
     @Id
-    private String UserId;
+    private String tbUserId;
     @Id
-    private int DictWordNo;
+    private int tbDictWordNo;
+    @Column(columnDefinition = "char")
     private String saveFl;
     private Date searchDt;
 
     @Builder
-    public Search(String userId, int dictWordNo, String saveFl, Date searchDt) {
-        UserId = userId;
-        DictWordNo = dictWordNo;
+    public Search(String tbUserId, int tbDictWordNo, String saveFl, Date searchDt) {
+        this.tbUserId = tbUserId;
+        this.tbDictWordNo = tbDictWordNo;
         this.saveFl = saveFl;
         this.searchDt = searchDt;
     }

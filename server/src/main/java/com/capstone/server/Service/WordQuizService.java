@@ -33,12 +33,12 @@ public class WordQuizService {
         List<WordQuiz> quiz_items = wordQuizRepository.findTop3By();
         for(int i=0; i<3; i++){
             WordQuiz wordQuiz = quiz_items.get(i);
-            List<WordQuizItem> quiz_item_items_data = wordQuizItemRepository.findAllByTbWordQuizQuizNo(wordQuiz.getQuizNo());
+            List<WordQuizItem> quiz_item_items_data = wordQuizItemRepository.findAllByWordQuizNo(wordQuiz.getQuizNo());
             List<String> quiz_item_items = new ArrayList<>();
             for(int j=0; j<quiz_item_items_data.size(); j++) {
                 quiz_item_items.add(quiz_item_items_data.get(i).getItemValue());
             }
-            Optional<WordQuizAnswer> quiz_solved = wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizQuizNo(userId, wordQuiz.getQuizNo());
+            Optional<WordQuizAnswer> quiz_solved = wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizNo(userId, wordQuiz.getQuizNo());
             if(quiz_solved.isPresent()) {
                 WordQuizResultDTO wordQuizResultDTO = new WordQuizResultDTO(wordQuiz.getQuizNo(),
                         wordQuiz.getQuizQuestion(), quiz_item_items, wordQuiz.getQuizAns(), "Y", quiz_solved.get().getQuizInp());

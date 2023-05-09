@@ -13,28 +13,24 @@ public class DictDTO {
     private int wordNo;
     private String wordNm;
     private String wordMean;
-    private String wordEx;
 
     @Builder
-    public DictDTO(int wordNo, String wordNm, String wordMean, String wordEx) {
+    public DictDTO(int wordNo, String wordNm, String wordMean) {
         this.wordNo = wordNo;
         this.wordNm = wordNm;
         this.wordMean = wordMean;
-        this.wordEx = wordEx;
     }
 
     public Dict toEntity(){
         return Dict.builder()
                 .wordNo(wordNo)
                 .wordNm(wordNm)
-                .wordMean(wordMean)
-                .wordEx(wordEx).build();
+                .wordMean(wordMean).build();
     }
     public DictDTO fromEntity(Dict dict){
         return DictDTO.builder()
                 .wordNo(dict.getWordNo())
                 .wordNm(dict.getWordNm())
-                .wordMean(dict.getWordMean())
-                .wordEx(dict.getWordEx()).build();
+                .wordMean(dict.getWordMean()).build();
     }
 }

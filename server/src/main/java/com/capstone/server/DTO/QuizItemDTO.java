@@ -11,31 +11,31 @@ import javax.persistence.Id;
 @Setter
 public class QuizItemDTO {
 
-    private int tbQuizTbArticleId;
-    private int tbQuizQuizNo;
+    private int tbArticleId;
+    private int tbQuizNo;
     private int itemNo;
     private String itemValue;
 
     @Builder
-    public QuizItemDTO(int tbQuizTbArticleId, int tbQuizQuizNo, int itemNo, String itemValue) {
-        this.tbQuizTbArticleId = tbQuizTbArticleId;
-        this.tbQuizQuizNo = tbQuizQuizNo;
+    public QuizItemDTO(int tbArticleId, int tbQuizNo, int itemNo, String itemValue) {
+        this.tbArticleId = tbArticleId;
+        this.tbQuizNo = tbQuizNo;
         this.itemNo = itemNo;
         this.itemValue = itemValue;
     }
 
     public QuizItem toEntity(){
         return QuizItem.builder()
-                .tbQuizTbArticleId(tbQuizTbArticleId)
-                .tbQuizQuizNo(tbQuizQuizNo)
+                .tbArticleId(tbArticleId)
+                .tbQuizNo(tbQuizNo)
                 .itemNo(itemNo)
                 .itemValue(itemValue).build();
 
     }
     public QuizItemDTO fromEntity(QuizItem quizItem){
         return QuizItemDTO.builder()
-                .tbQuizTbArticleId(quizItem.getTbQuizTbArticleId())
-                .tbQuizQuizNo(quizItem.getTbQuizQuizNo())
+                .tbArticleId(quizItem.getTbArticleId())
+                .tbQuizNo(quizItem.getTbQuizNo())
                 .itemNo(quizItem.getItemNo())
                 .itemValue(quizItem.getItemValue()).build();
 

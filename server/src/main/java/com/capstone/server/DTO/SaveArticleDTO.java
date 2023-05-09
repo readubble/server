@@ -10,19 +10,19 @@ import lombok.Setter;
 public class SaveArticleDTO {
     private int saveNo;
     private int cgNo;
-    private int fkTbArticleId;
-    private String userId;
+    private int tbArticleId;
+    private String tbUserId;
     private String genre;
     private String atcTitle;
     private String difficulty;
     private String atcPhotoTn;
 
     @Builder
-    public SaveArticleDTO(int saveNo, int cgNo, int fkTbArticleId, String userId, String genre, String atcTitle, String difficulty, String atcPhotoTn) {
+    public SaveArticleDTO(int saveNo, int cgNo, int tbArticleId, String tbUserId, String genre, String atcTitle, String difficulty, String atcPhotoTn) {
         this.saveNo = saveNo;
         this.cgNo = cgNo;
-        this.fkTbArticleId = fkTbArticleId;
-        this.userId = userId;
+        this.tbArticleId = tbArticleId;
+        this.tbUserId = tbUserId;
         this.genre = genre;
         this.atcTitle = atcTitle;
         this.difficulty = difficulty;
@@ -33,8 +33,8 @@ public class SaveArticleDTO {
         return SaveArticle.builder()
                 .saveNo(saveNo)
                 .cgNo(cgNo)
-                .fkTbArticleId(fkTbArticleId)
-                .userId(userId)
+                .tbArticleId(tbArticleId)
+                .tbUserId(tbUserId)
                 .genre(genre)
                 .atcTitle(atcTitle)
                 .difficulty(difficulty)
@@ -44,8 +44,8 @@ public class SaveArticleDTO {
         return SaveArticleDTO.builder()
                 .saveNo(saveArticle.getSaveNo())
                 .cgNo(saveArticle.getCgNo())
-                .fkTbArticleId(saveArticle.getFkTbArticleId())
-                .userId(saveArticle.getUserId())
+                .tbArticleId(saveArticle.getTbArticleId())
+                .tbUserId(saveArticle.getTbUserId())
                 .genre(saveArticle.getGenre())
                 .atcTitle(saveArticle.getAtcTitle())
                 .difficulty(saveArticle.getDifficulty())

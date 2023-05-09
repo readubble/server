@@ -9,31 +9,31 @@ import lombok.Setter;
 @Setter
 public class SaveWordDTO {
     private int saveNo;
-    private String userId;
-    private int fkTbWordNo;
+    private String tbUserId;
+    private int tbWordNo;
     private String wordNm;
 
     @Builder
-    public SaveWordDTO(int saveNo, String userId, int fkTbWordNo, String wordNm) {
+    public SaveWordDTO(int saveNo, String tbUserId, int tbWordNo, String wordNm) {
         this.saveNo = saveNo;
-        this.userId = userId;
-        this.fkTbWordNo = fkTbWordNo;
+        this.tbUserId = tbUserId;
+        this.tbWordNo = tbWordNo;
         this.wordNm = wordNm;
     }
 
     public SaveWord toEntity(){
         return SaveWord.builder()
                 .saveNo(saveNo)
-                .userId(userId)
-                .fkTbWordNo(fkTbWordNo)
+                .tbUserId(tbUserId)
+                .tbWordNo(tbWordNo)
                 .wordNm(wordNm).build();
     }
 
     public SaveWordDTO fromEntity(SaveWord saveWord){
         return SaveWordDTO.builder()
                 .saveNo(saveWord.getSaveNo())
-                .userId(saveWord.getUserId())
-                .fkTbWordNo(saveWord.getFkTbWordNo())
+                .tbUserId(saveWord.getTbUserId())
+                .tbWordNo(saveWord.getTbWordNo())
                 .wordNm(saveWord.getWordNm()).build();
     }
 }

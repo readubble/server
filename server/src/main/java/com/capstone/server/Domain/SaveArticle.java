@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -16,19 +17,20 @@ public class SaveArticle {
     @Id
     private int saveNo;
     private int cgNo;
-    private int fkTbArticleId;
-    private String userId;
+    private int tbArticleId;
+    private String tbUserId;
     private String genre;
     private String atcTitle;
+    @Column(columnDefinition = "char")
     private String difficulty;
     private String atcPhotoTn;
 
     @Builder
-    public SaveArticle(int saveNo, int cgNo, int fkTbArticleId, String userId, String genre, String atcTitle, String difficulty, String atcPhotoTn) {
+    public SaveArticle(int saveNo, int cgNo, int tbArticleId, String tbUserId, String genre, String atcTitle, String difficulty, String atcPhotoTn) {
         this.saveNo = saveNo;
         this.cgNo = cgNo;
-        this.fkTbArticleId = fkTbArticleId;
-        this.userId= userId;
+        this.tbArticleId = tbArticleId;
+        this.tbUserId = tbUserId;
         this.genre = genre;
         this.atcTitle = atcTitle;
         this.difficulty = difficulty;
