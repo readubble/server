@@ -94,7 +94,7 @@ public class UserController {
 
     @PostMapping("/users/authorize/token")
     public ResultResponseDTO tokenRenew(@RequestHeader("Authorization") String Authorization, @RequestBody JSONObject jsonObject, HttpServletResponse response, HttpServletRequest request){
-        String userId = tokenService.getUsername(Authorization);
+        String userId = tokenService.getUsername(Authorization.replaceFirst("Bearer ",""));
         String RefreshToken = jsonObject.get("refresh_token").toString();
         String accessToken = tokenService.TokenRenew(RefreshToken, userId);
         JSONObject result = new JSONObject();
