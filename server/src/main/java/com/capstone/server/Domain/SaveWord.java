@@ -16,14 +16,14 @@ public class SaveWord {
     @Id
     private int saveNo;
     private String tbUserId;
-    private int tbWordNo;
+    private int targetCode;
     private String wordNm;
 
     @Builder
-    public SaveWord(int saveNo, String tbUserId, int tbWordNo, String wordNm) {
+    public SaveWord(int saveNo, String tbUserId, int targetCode, String wordNm) {
         this.saveNo = saveNo;
         this.tbUserId = tbUserId;
-        this.tbWordNo = tbWordNo;
+        this.targetCode = targetCode;
         this.wordNm = wordNm;
     }
 }

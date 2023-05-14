@@ -32,4 +32,8 @@ public class Search {
         this.saveFl = saveFl;
         this.searchDt = searchDt;
     }
+
+    public void setSaveFl(String saveFl) {
+        this.saveFl = saveFl;
+    }
 }

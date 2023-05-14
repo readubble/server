@@ -10,4 +10,8 @@ import java.util.List;
 @Repository
 public interface DictRepository extends JpaRepository<Dict, String> {
     List<DictDTO> findAllByWordNm(String wordNm);
+
+    Dict findByTargetCode(int targetCode);
+
+    Dict findByWordNo(int wordNo);
 }

@@ -47,5 +47,9 @@ public class TbRead {
         this.inpTopic = inpTopic;
         this.inpSmr = inpSmr;
     }
+
+    public void setSaveFl(String saveFl) {
+        this.saveFl = saveFl;
+    }
 }
 

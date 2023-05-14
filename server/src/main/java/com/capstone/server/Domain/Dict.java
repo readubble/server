@@ -18,10 +18,13 @@ public class Dict {
     private String wordNm;
     private String wordMean;
 
+    private int targetCode;
+
     @Builder
-    public Dict(int wordNo, String wordNm, String wordMean) {
+    public Dict(int wordNo, String wordNm, String wordMean, int targetCode) {
         this.wordNo = wordNo;
         this.wordNm = wordNm;
         this.wordMean = wordMean;
+        this.targetCode = targetCode;
     }
 }
