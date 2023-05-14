@@ -17,7 +17,6 @@ public class Dict {
     private int wordNo;
     private String wordNm;
     private String wordMean;
-
     private int targetCode;
 
     @Builder

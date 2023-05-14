@@ -43,7 +43,7 @@ public class WordController {
 
     // 단어 북마크
     @PostMapping ("/word/{word-id}/bookmark")
-    public ResultResponseDTO wordBookmark(@PathVariable("word_id") int wordId, @RequestBody JSONObject jsonObject){
+    public ResultResponseDTO wordBookmark(@PathVariable("word-id") int wordId, @RequestBody JSONObject jsonObject){
 //     1. Authorization에 토큰 저장 / wordId에 word_id 저장 / BodyParameter는 JSONObject로 받아옴
         String userId = jsonObject.get("user_id").toString();
         searchService.updateSaveFl(userId, wordId);
