@@ -108,7 +108,7 @@ public class DictService {
             Iterator<JsonNode> items = jsonNode.get("channel").get("item").iterator();
             while(items.hasNext()){
                 JsonNode tmp = items.next();
-                DictDTO dictDTO = new DictDTO(tmp.get("target_code").asInt(), tmp.get("word").asText(),
+                DictDTO dictDTO = new DictDTO(tmp.get("target_code").asInt(), tmp.get("word").asText(), tmp.get("target_code").asInt(),
                         tmp.get("sense").get("definition").asText());
                 result.add(dictDTO);
                 Search search = new Search(userId, tmp.get("target_code").asInt(), "N", date);

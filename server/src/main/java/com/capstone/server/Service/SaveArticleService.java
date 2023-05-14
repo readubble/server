@@ -41,7 +41,7 @@ public class SaveArticleService {
     public void ArticleBookMark(String userId, int articleId) {
         // 1. 먼저, articleId를 이용하여 Article 테이블에서 해당 문제의 정보를 가져옵니다.
         Article article = articleRepository.findById(articleId);
-        Boolean saveArticleCheck = saveArticleRepository.existsByUserIdAndTbArticleId(userId, articleId);
+        Boolean saveArticleCheck = saveArticleRepository.existsByTbUserIdAndTbArticleId(userId, articleId);
         // 이후, SaveArticle 테이블에서 현재 사용자가 해당 문제를 이미 북마크한 적이 있는지 확인합니다.
         // findByTbUserIdAndAndTbArticleId 메소드를 이용하여 tbUserId와 tbArticleId가 모두 일치하는 데이터를 검색하고
         // 결과를 saveArticleCheck 변수에 저장합니다.

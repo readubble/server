@@ -34,6 +34,7 @@ public class TokenService {
             String username = JWT.decode(token)
                     .getClaim("id")
                     .asString();
+            System.out.println(username);
             return username;
         } catch (Exception e){
             throw new ApiException(ExceptionEnum.TOKEN_ERROR);

@@ -6,6 +6,7 @@ import com.capstone.server.Interface.ArticleInterface;
 import com.capstone.server.Repository.UserRepository;
 import com.capstone.server.Service.ArticleService;
 import com.capstone.server.Service.QuizService;
+import com.capstone.server.Service.SaveArticleService;
 import com.capstone.server.Service.TbReadService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,6 +50,8 @@ class ProblemControllerTest {
     QuizService quizService;
     @MockBean
     TbReadService tbReadService;
+    @MockBean
+    SaveArticleService saveArticleService;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -180,6 +183,21 @@ class ProblemControllerTest {
         mvc.perform(get("/problem/1/users/test123")
                         .header("Authorization", "token"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("test123")
+    public void problemBookmark_test() throws Exception{
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("user_id", "test123");
+        String content = objectMapper.writeValueAsString(jsonObject);
+        mvc.perform(post("/problem/1/bookmark")
+                .header("Authorization", "")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+
     }
 
 }

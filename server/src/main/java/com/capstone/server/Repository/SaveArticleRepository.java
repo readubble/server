@@ -17,5 +17,5 @@ public interface SaveArticleRepository extends JpaRepository<SaveArticle, String
     // 이 메서드는 List<SaveWord>를 반환합니다.
     List<SaveArticle> findAllByTbUserId(String tbUserId);
 
-    Boolean existsByUserIdAndTbArticleId(String tbUserId, int tbArticleId);
+    Boolean existsByTbUserIdAndTbArticleId(String tbUserId, int tbArticleId);
 }
