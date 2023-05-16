@@ -36,7 +36,7 @@ public class WordQuizService {
             List<WordQuizItem> quiz_item_items_data = wordQuizItemRepository.findAllByWordQuizNo(wordQuiz.getQuizNo());
             List<String> quiz_item_items = new ArrayList<>();
             for(int j=0; j<quiz_item_items_data.size(); j++) {
-                quiz_item_items.add(quiz_item_items_data.get(i).getItemValue());
+                quiz_item_items.add(quiz_item_items_data.get(j).getItemValue());
             }
             Optional<WordQuizAnswer> quiz_solved = wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizNo(userId, wordQuiz.getQuizNo());
             if(quiz_solved.isPresent()) {
