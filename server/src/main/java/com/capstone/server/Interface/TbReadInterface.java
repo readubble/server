@@ -1,7 +1,7 @@
 package com.capstone.server.Interface;
 
 public interface TbReadInterface {
-    int getTbArticleId();
+    Integer getTbArticleId();
     String getAtcTitle();
     String getGenre();
 }

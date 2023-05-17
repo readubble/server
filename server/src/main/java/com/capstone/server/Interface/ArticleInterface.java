@@ -1,7 +1,7 @@
 package com.capstone.server.Interface;
 
 public interface ArticleInterface {
-    int getId();
+    Integer getId();
     String getAtcTitle();
     String getAtcWriter();
     String getAtcPhotoIn();

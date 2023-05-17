@@ -48,7 +48,7 @@ class TbReadServiceTest {
         List list = new ArrayList();
         TbReadInterface tbReadInterface = new TbReadInterface() {
             @Override
-            public int getTbArticleId() {
+            public Integer getTbArticleId() {
                 return 1;
             }
 

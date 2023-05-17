@@ -41,7 +41,7 @@ class ArticleServiceTest {
 
         ArticleInterface article = new ArticleInterface() {
             @Override
-            public int getId(){return 1;}
+            public Integer getId(){return 1;}
             @Override
             public String getAtcTitle() {
                 return "title1";
