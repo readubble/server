@@ -28,7 +28,7 @@ public class QuizService {
         for(int i=0; i<quiz.size(); i++){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("problem", quiz.get(i).getQuizQuestion());
-            List<String> item = quizItemRepository.findAllByTbQuizNo(quiz.get(i).getQuizNo()).stream().map(r -> r.getItemValue()).collect(Collectors.toList());
+            List<String> item = quizItemRepository.findAllByTbArticleIdAndTbQuizNo(id,quiz.get(i).getQuizNo()).stream().map(r -> r.getItemValue()).collect(Collectors.toList());
             jsonObject.put("choices", item);
             jsonObject.put("answer", quiz.get(i).getQuizAns());
             result.add(jsonObject);
