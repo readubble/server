@@ -47,7 +47,7 @@ public class TbReadService {
                 .startTime(problemRequestDTO.getStartTime())
                 .finishTime(problemRequestDTO.getFinishTime())
                 .totalTime(problemRequestDTO.getTotalTime())
-                .saveFl("")
+                .saveFl("N")
                 .solveFl("Y")
                 .inpKwd1(problemRequestDTO.getKeyword().get(0))
                 .inpKwd2(problemRequestDTO.getKeyword().get(1))
@@ -58,7 +58,8 @@ public class TbReadService {
         tbReadRepository.save(tbRead); // TbRead 데이터 저장: tbRead 객체를 이용해 tbReadRepository에서 데이터를 저장합니다.
         // QuizAnswer 데이터 저장: quizAnswer 객체를 이용해 quizAnswerRepository에서 데이터를 저장합니다. 이 과정은 문제 수 만큼 반복됩니다.
         for(int i=0; i<problemRequestDTO.getQuizChoice().size(); i++){
-            QuizAnswer quizAnswer = QuizAnswer.builder() // QuizAnswer 객체 생성: problemRequestDTO에서 필요한 값을 가져와서 QuizAnswer 객체를 생성합니다.
+            QuizAnswer quizAnswer = QuizAnswer.builder()
+                    .tbUserId(problemRequestDTO.getUserId())// QuizAnswer 객체 생성: problemRequestDTO에서 필요한 값을 가져와서 QuizAnswer 객체를 생성합니다.
                     .tbArticleId(id)
                     .tbQuizNo(problemRequestDTO.getQuizId().get(i))
                     .quizInp(problemRequestDTO.getQuizChoice().get(i))
@@ -76,6 +77,7 @@ public class TbReadService {
         jsonObject.put("sentence", Arrays.asList(result.getInpTopic().split("[|]")));
         jsonObject.put("summarization", result.getInpSmr());
         jsonObject.put("ai-summarization", articleService.getSummarization(problemId));
+        jsonObject.put("save_fl", result.getSaveFl());
         return jsonObject;
     }
 

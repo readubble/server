@@ -1,6 +1,7 @@
 package com.capstone.server.Controller;
 
 import com.capstone.server.DTO.DictDTO;
+import com.capstone.server.DTO.ResponseDTO.DictResponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ListResultReponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResultResponseDTO;
 import com.capstone.server.Exception.ApiException;
@@ -37,7 +38,7 @@ public class WordController {
         String userId = jsonObject.get("id").toString();
         String keyword = jsonObject.get("keyword").toString();
         try {
-            List<DictDTO> result = dictService.getDictInfo(keyword, userId);
+            List<DictResponseDTO> result = dictService.getDictInfo(keyword, userId);
             return ListResultReponseDTO.builder()
                     .code(HttpStatus.OK.value())
                     .message(HttpStatus.OK.getReasonPhrase())
