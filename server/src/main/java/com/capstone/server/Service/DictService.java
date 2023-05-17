@@ -1,6 +1,7 @@
 package com.capstone.server.Service;
 
 import com.capstone.server.DTO.DictDTO;
+import com.capstone.server.DTO.ResponseDTO.DictResponseDTO;
 import com.capstone.server.Domain.Search;
 import com.capstone.server.Etc.DictKey;
 import com.capstone.server.Repository.DictRepository;
@@ -20,10 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -79,8 +77,8 @@ public class DictService {
         }
     }
 
-    public List<DictDTO> getDictInfo(String keyword, String userId) throws IOException {
-        List<DictDTO> result = new ArrayList<>();
+    public List<DictResponseDTO> getDictInfo(String keyword, String userId) throws IOException {
+        List<DictResponseDTO> result = new ArrayList<>();
         Response response = getDictApi(keyword, 1, 10);
         if(checkStatus(response)){ //응답 정상
             String responseBody = response.response.getBody();
@@ -103,12 +101,20 @@ public class DictService {
             Iterator<JsonNode> items = jsonNode.get("channel").get("item").iterator();
             while(items.hasNext()){
                 JsonNode tmp = items.next();
-                DictDTO dictDTO = new DictDTO(tmp.get("target_code").asInt(), tmp.get("word").asText(), tmp.get("target_code").asInt(),
-                        tmp.get("sense").get("definition").asText());
-                result.add(dictDTO);
-                if(!searchRepository.existsByTbUserIdAndTbDictWordNo(userId, tmp.get("target_code").asInt())) {
-                    Search search = new Search(userId, tmp.get("target_code").asInt(), "N", date);
-                    searchRepository.save(search);
+                DictResponseDTO dictResponseDTO;
+//                DictDTO dictDTO = new DictDTO(tmp.get("target_code").asInt(), tmp.get("word").asText(), tmp.get("target_code").asInt(),
+//                        tmp.get("sense").get("definition").asText());
+                Optional<Search> search = searchRepository.findByTbUserIdAndTbDictWordNo(userId, tmp.get("target_code").asInt());
+                if(search.isEmpty()) {
+                    Search searchObj = new Search(userId, tmp.get("target_code").asInt(), "N", date);
+                    searchRepository.save(searchObj);
+                    dictResponseDTO = new DictResponseDTO(tmp.get("target_code").asInt(), tmp.get("word").asText(),
+                            tmp.get("sense").get("definition").asText(), "N");
+                    result.add(dictResponseDTO);
+                }else{
+                    dictResponseDTO = new DictResponseDTO(tmp.get("target_code").asInt(), tmp.get("word").asText(),
+                            tmp.get("sense").get("definition").asText(), search.get().getSaveFl());
+                    result.add(dictResponseDTO);
                 }
             }
             return result;
@@ -119,15 +125,28 @@ public class DictService {
         }
     }
 
-    public List<DictDTO> getDictInfoDB(String keyword, String userId){
+    public List<DictResponseDTO> getDictInfoDB(String keyword, String userId){
         List<DictDTO> result = dictRepository.findAllByWordNmStartingWith(keyword);
+        List<DictResponseDTO> responseResult = new ArrayList<>();
         Date date = new Date();
         for(int i=0; i<result.size(); i++){
-            if(!searchRepository.existsByTbUserIdAndTbDictWordNo(userId, result.get(i).getTargetCode())) {
-                Search search = new Search(userId, result.get(i).getTargetCode(), "N", date);
-                searchRepository.save(search);
+            Optional<Search> search = searchRepository.findByTbUserIdAndTbDictWordNo(userId, result.get(i).getTargetCode());
+            if(search.isEmpty()) {
+                Search searchObj = new Search(userId, result.get(i).getTargetCode(), "N", date);
+                searchRepository.save(searchObj);
+                responseResult.add(DictResponseDTO.builder()
+                        .targetCode(result.get(i).getTargetCode())
+                        .wordNm(result.get(i).getWordNm())
+                        .wordMean(result.get(i).getWordMean())
+                        .saveFl("N").build());
+            }else{
+                responseResult.add(DictResponseDTO.builder()
+                        .targetCode(result.get(i).getTargetCode())
+                        .wordNm(result.get(i).getWordNm())
+                        .wordMean(result.get(i).getWordMean())
+                        .saveFl(search.get().getSaveFl()).build());
             }
         }
-        return result;
+        return responseResult;
     }
 }

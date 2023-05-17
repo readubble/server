@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class SearchService {
@@ -21,12 +23,14 @@ public class SearchService {
     }
 
     public void updateSaveFl(String userId, int wordNo){
-        Search searchData = searchRepository.findByTbUserIdAndTbDictWordNo(userId, wordNo);
-        if (searchData.getSaveFl() == "Y") { // 데이터가 존재하는 경우,
-            searchData.setSaveFl("N"); // setSaveFl() 메소드를 이용해 save_fl 값을 "Y"로 업데이트한 뒤,
-        } else {
-            searchData.setSaveFl("Y");
+        Optional<Search> searchData = searchRepository.findByTbUserIdAndTbDictWordNo(userId, wordNo);
+        if(searchData.isPresent()) {
+            if (searchData.get().getSaveFl() == "Y") { // 데이터가 존재하는 경우,
+                searchData.get().setSaveFl("N"); // setSaveFl() 메소드를 이용해 save_fl 값을 "Y"로 업데이트한 뒤,
+            } else {
+                searchData.get().setSaveFl("Y");
+            }
+            searchRepository.save(searchData.get());
         }
-        searchRepository.save(searchData);
     }
 }

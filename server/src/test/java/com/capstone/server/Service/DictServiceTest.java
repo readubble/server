@@ -1,6 +1,7 @@
 package com.capstone.server.Service;
 
 import com.capstone.server.DTO.DictDTO;
+import com.capstone.server.DTO.ResponseDTO.DictResponseDTO;
 import com.capstone.server.Domain.Search;
 import com.capstone.server.Repository.DictRepository;
 import com.capstone.server.Repository.SearchRepository;
@@ -42,15 +43,15 @@ class DictServiceTest {
     void getDictInfoDB_test(){
         when(dictRepository.findAllByWordNmStartingWith("사과"))
                 .thenReturn(List.of(dict1, dict2));
-        List<DictDTO> result = dictService.getDictInfoDB("사과", "test123");
+        List<DictResponseDTO> result = dictService.getDictInfoDB("사과", "test123");
         assertThat(result.size()).isEqualTo(2);
-        assertThat(result.get(0).getWordNo()).isEqualTo(1);
+        assertThat(result.get(0).getTargetCode()).isEqualTo(1);
         verify(searchRepository, times(2)).save(any(Search.class));
     }
 
     @Test
     void getDictInfo_test() throws IOException {
-        List<DictDTO> result = dictService.getDictInfo("사과", "test123");
+        List<DictResponseDTO> result = dictService.getDictInfo("사과", "test123");
         assertThat(result.size()).isEqualTo(8);
     }
 

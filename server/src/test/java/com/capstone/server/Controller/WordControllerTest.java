@@ -1,6 +1,7 @@
 package com.capstone.server.Controller;
 
 import com.capstone.server.DTO.DictDTO;
+import com.capstone.server.DTO.ResponseDTO.DictResponseDTO;
 import com.capstone.server.Domain.User;
 import com.capstone.server.Repository.UserRepository;
 import com.capstone.server.Service.ArticleService;
@@ -49,8 +50,8 @@ class WordControllerTest {
     UserRepository userRepository;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
-    static DictDTO dict1;
-    static DictDTO dict2;
+    static DictResponseDTO dict1;
+    static DictResponseDTO dict2;
 
     @PostConstruct
     void setting() {
@@ -63,8 +64,8 @@ class WordControllerTest {
                 .userExp(0)
                 .userPhotoIn("")
                 .role("ROLE_USER").build());
-        dict1 = new DictDTO(1, "사과", 1, "살이 연하고 달며 물이 많은 참외");
-        dict2 = new DictDTO(2, "사과", 1, "조선 시대에, 오위에 둔 정육품의 군직. 현직에 종사하고 있찌 않은 문관, 무관 및 음관이 맡았다.");
+        dict1 = new DictResponseDTO(1, "사과", "살이 연하고 달며 물이 많은 참외", "Y");
+        dict2 = new DictResponseDTO(2, "사과", "조선 시대에, 오위에 둔 정육품의 군직. 현직에 종사하고 있찌 않은 문관, 무관 및 음관이 맡았다.", "N");
 
     }
 
