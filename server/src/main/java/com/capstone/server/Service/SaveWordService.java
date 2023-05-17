@@ -1,8 +1,10 @@
 package com.capstone.server.Service;
 
+import com.capstone.server.DTO.DictDTO;
 import com.capstone.server.DTO.SaveWordDTO;
 import com.capstone.server.Domain.Dict;
 import com.capstone.server.Domain.SaveWord;
+import com.capstone.server.Domain.WordQuiz;
 import com.capstone.server.Repository.DictRepository;
 import com.capstone.server.Repository.SaveWordRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Id;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -69,4 +72,14 @@ public class SaveWordService {
         return saveWordRepository.findAllByTbUserId(userId);
     }
 
+    public List<DictDTO> SaveWordList(String userId){
+        List<SaveWord> saveList = getSavedWords(userId);
+        List<DictDTO> result = new ArrayList<>();
+        for(int i=0; i<saveList.size(); i++){
+            Dict dict = dictRepository.findByTargetCode(saveList.get(i).getTargetCode());
+            DictDTO dictDTO = DictDTO.builder().build();
+            result.add(dictDTO.fromEntity(dict));
+        }
+        return result;
+    }
 }

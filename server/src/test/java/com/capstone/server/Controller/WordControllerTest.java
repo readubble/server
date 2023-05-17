@@ -27,6 +27,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -97,6 +98,18 @@ class WordControllerTest {
                         .content(content)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+
+    }
+
+    @Test
+    @WithUserDetails("test123")
+    public void wordBookmarkListTest() throws Exception{
+        when(saveWordService.SaveWordList("test123"))
+                .thenReturn(List.of(DictDTO.builder().targetCode(123).build()));
+        mvc.perform(get("/word/bookmark/users/test123")
+                        .header("Authorization",""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].targetCode").value(123));
 
     }
 }

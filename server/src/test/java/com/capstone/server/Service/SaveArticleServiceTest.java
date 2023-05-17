@@ -1,5 +1,6 @@
 package com.capstone.server.Service;
 
+import com.capstone.server.DTO.ArticleDTO;
 import com.capstone.server.Domain.Article;
 import com.capstone.server.Domain.SaveArticle;
 import com.capstone.server.Domain.User;
@@ -14,6 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -65,5 +69,17 @@ class SaveArticleServiceTest {
         verify(saveArticleRepository, times(1)).delete(any(SaveArticle.class));
     }
 
+    @Test
+    void save_article_list_test(){
+        when(articleRepository.findById(anyInt()))
+                .thenReturn(Article.builder().id(1).build());
+        when(saveArticleRepository.findAllByTbUserId("test123"))
+                .thenReturn(List.of(SaveArticle.builder()
+                        .tbUserId("test123")
+                        .tbArticleId(1).build()));
+        List<ArticleDTO> result = saveArticleService.saveArticleList("test123");
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getId()).isEqualTo(1);
+    }
 
 }

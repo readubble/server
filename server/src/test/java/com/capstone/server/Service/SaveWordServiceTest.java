@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -102,5 +103,17 @@ class SaveWordServiceTest {
         // then
         assertEquals(2, result.size());
         verify(saveWordRepository, times(1)).findAllByTbUserId(anyString());
+    }
+
+    @Test
+    void SaveWordList_test(){
+        when(saveWordRepository.findAllByTbUserId(anyString()))
+                .thenReturn(List.of(SaveWord.builder().targetCode(123).build()));
+        when(dictRepository.findByTargetCode(123))
+                .thenReturn(Dict.builder().targetCode(123).build());
+
+        List<DictDTO> result = saveWordService.SaveWordList("test123");
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getTargetCode()).isEqualTo(123);
     }
 }

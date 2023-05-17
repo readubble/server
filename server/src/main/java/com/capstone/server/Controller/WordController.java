@@ -4,6 +4,7 @@ import com.capstone.server.DTO.DictDTO;
 import com.capstone.server.DTO.ResponseDTO.DictResponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ListResultReponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResultResponseDTO;
+import com.capstone.server.Domain.SaveWord;
 import com.capstone.server.Exception.ApiException;
 import com.capstone.server.Exception.ExceptionEnum;
 import com.capstone.server.Service.DictService;
@@ -62,5 +63,15 @@ public class WordController {
         return ResultResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase()).build();
+    }
+
+    @GetMapping("/word/bookmark/users/{user-id}")
+    public ListResultReponseDTO wordBookmarkList(@PathVariable("user-id") String id){
+        List<DictDTO> result = saveWordService.SaveWordList(id);
+        return ListResultReponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(result).build();
+
     }
 }
