@@ -28,7 +28,7 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public List<ArticleInterface> articleList(String userId, String category, int page, int size){
+    public List<ArticleInterface> articleList(String userId, int category, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         List<ArticleInterface> result = articleRepository.findByArticleLEFTJOINTbRead(userId, category, pageable).toList();
         return result;

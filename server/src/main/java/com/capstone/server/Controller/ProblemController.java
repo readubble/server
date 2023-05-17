@@ -35,7 +35,7 @@ public class ProblemController {
     }
 
     @GetMapping("/problem/users/{id}")
-    public ListResultReponseDTO problemList(@PathVariable("id") String userId, @RequestParam(name="category", required=true) String category, @RequestParam(name="page", required = false, defaultValue = "0") int page, @RequestParam(name="size", required = false, defaultValue = "5") int size){
+    public ListResultReponseDTO problemList(@PathVariable("id") String userId, @RequestParam(name="category", required=true) int category, @RequestParam(name="page", required = false, defaultValue = "0") int page, @RequestParam(name="size", required = false, defaultValue = "5") int size){
         List<ArticleInterface> result = articleService.articleList(userId, category, page, size);
         return ListResultReponseDTO.builder()
                 .code(HttpStatus.OK.value())

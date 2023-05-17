@@ -105,7 +105,7 @@ class ProblemControllerTest {
         };
         result.add(article);
 
-        when(articleService.articleList(anyString(), anyString(), anyInt(), anyInt()))
+        when(articleService.articleList(anyString(), anyInt(), anyInt(), anyInt()))
                 .thenReturn(result);
 
         mvc.perform(get("/problem/users/test123?category=art")
