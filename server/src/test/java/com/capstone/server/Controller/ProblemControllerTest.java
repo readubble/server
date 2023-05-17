@@ -1,5 +1,6 @@
 package com.capstone.server.Controller;
 
+import com.capstone.server.DTO.ArticleDTO;
 import com.capstone.server.DTO.RequestDTO.ProblemRequestDTO;
 import com.capstone.server.Domain.User;
 import com.capstone.server.Interface.ArticleInterface;
@@ -197,6 +198,19 @@ class ProblemControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
+
+    }
+
+    @Test
+    @WithUserDetails("test123")
+    public void problemBookmarkList_test() throws Exception{
+        when(saveArticleService.saveArticleList("test123"))
+                .thenReturn(List.of(ArticleDTO.builder()
+                        .atcTitle("test").build()));
+        mvc.perform(get("/problem/bookmark/users/test123")
+                .header("Authorization",""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].atcTitle").value("test"));
 
     }
 

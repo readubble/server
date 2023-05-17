@@ -1,5 +1,6 @@
 package com.capstone.server.Controller;
 
+import com.capstone.server.DTO.ArticleDTO;
 import com.capstone.server.DTO.RequestDTO.ProblemRequestDTO;
 import com.capstone.server.DTO.ResponseDTO.ListResultReponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ProblemResponseDTO;
@@ -94,5 +95,14 @@ public class ProblemController {
         return ResultResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase()).build();
+    }
+
+    @GetMapping("/problem/bookmark/users/{user-id}")
+    public ListResultReponseDTO problemBookmarkList(@PathVariable("user-id") String id){
+        List<ArticleDTO> result = saveArticleService.saveArticleList(id);
+        return ListResultReponseDTO.builder()
+                .code(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(result).build();
     }
 }

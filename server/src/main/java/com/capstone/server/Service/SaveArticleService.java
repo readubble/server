@@ -1,5 +1,6 @@
 package com.capstone.server.Service;
 
+import com.capstone.server.DTO.ArticleDTO;
 import com.capstone.server.Domain.SaveWord;
 import com.capstone.server.Repository.ArticleRepository;
 import com.capstone.server.Repository.SaveArticleRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -71,4 +73,16 @@ public class SaveArticleService {
     public List<SaveArticle> getSavedArticle(String userId) {
         return saveArticleRepository.findAllByTbUserId(userId);
     }
+
+    public List<ArticleDTO> saveArticleList(String userId){
+        List<SaveArticle> saveList = getSavedArticle(userId);
+        List<ArticleDTO> result = new ArrayList<>();
+        for(int i=0; i<saveList.size(); i++){
+            Article article = articleRepository.findById(saveList.get(i).getTbArticleId());
+            ArticleDTO articleDTO = ArticleDTO.builder().build();
+            result.add(articleDTO.fromEntity(article));
+        }
+        return result;
+    }
+
 }
