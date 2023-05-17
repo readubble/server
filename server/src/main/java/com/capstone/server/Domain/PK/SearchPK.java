@@ -7,5 +7,5 @@ import java.io.Serializable;
 @Data
 public class SearchPK implements Serializable {
     private String tbUserId;
-    private String tbDictWordNo;
+    private int tbDictWordNo;
 }

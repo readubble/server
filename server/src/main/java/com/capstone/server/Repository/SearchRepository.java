@@ -6,5 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SearchRepository extends JpaRepository<Search, String> {
-    Search findByTbUserIdAndTbDictWordNo(String userId, int wordNo);
+    Search findByTbUserIdAndTbDictWordNo(String userId, int tbDictWordNo);
+    Boolean existsByTbUserIdAndTbDictWordNo(String userId, int tbDictWordNo);
+    Search save(Search search);
 }

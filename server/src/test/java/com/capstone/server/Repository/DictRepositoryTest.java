@@ -1,7 +1,6 @@
 package com.capstone.server.Repository;
 
 import com.capstone.server.DTO.DictDTO;
-import com.capstone.server.Domain.Dict;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @RunWith(SpringRunner.class)
@@ -36,7 +34,7 @@ class DictRepositoryTest {
     void findAllByWordNm_test(){
         dictRepository.save(dict1.toEntity());
         dictRepository.save(dict2.toEntity());
-        List<DictDTO> result = dictRepository.findAllByWordNm("사과");
+        List<DictDTO> result = dictRepository.findAllByWordNmStartingWith("사과");
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0).getWordNo()).isEqualTo(1);
         assertThat(result.get(1).getWordNo()).isEqualTo(2);

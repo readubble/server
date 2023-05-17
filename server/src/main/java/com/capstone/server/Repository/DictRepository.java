@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface DictRepository extends JpaRepository<Dict, String> {
-    List<DictDTO> findAllByWordNm(String wordNm);
+    List<DictDTO> findAllByWordNmStartingWith(String wordNm);
 
     Dict findByTargetCode(int targetCode);
 
