@@ -93,8 +93,8 @@ class ArticleRepositoryTest {
         tbReadRepository.save(tbRead2);
 
         Pageable pageable = PageRequest.of(0, 2);
-        List<ArticleInterface> result_1 = articleRepository.findByArticleLEFTJOINTbRead("test123", "art", pageable).toList();
-        List<ArticleInterface> result_2 = articleRepository.findByArticleLEFTJOINTbRead("test123", "music", pageable).toList();
+        List<ArticleInterface> result_1 = articleRepository.findByArticleLEFTJOINTbRead("test123", 1, pageable).toList();
+        List<ArticleInterface> result_2 = articleRepository.findByArticleLEFTJOINTbRead("test123", 1, pageable).toList();
 
         assertThat(result_1.get(0).getAtcTitle()).isEqualTo("title2");
         assertThat(result_2.get(0).getAtcTitle()).isEqualTo("title4");

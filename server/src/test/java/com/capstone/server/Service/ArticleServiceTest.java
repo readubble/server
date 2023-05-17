@@ -69,9 +69,9 @@ class ArticleServiceTest {
         };
         result.add(article);
         Page<ArticleInterface> page = new PageImpl<>(result);
-        when(articleRepository.findByArticleLEFTJOINTbRead(anyString(), anyString(), any()))
+        when(articleRepository.findByArticleLEFTJOINTbRead(anyString(), anyInt(), any()))
                 .thenReturn(page);
-        List<ArticleInterface> result_list = articleService.articleList("test123", "art", 0, 1);
+        List<ArticleInterface> result_list = articleService.articleList("test123", 1, 0, 1);
         assertThat(result_list.get(0).getAtcTitle()).isEqualTo("title1");
     }
 
