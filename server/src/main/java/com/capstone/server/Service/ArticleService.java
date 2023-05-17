@@ -54,11 +54,7 @@ public class ArticleService {
         }
         jsonObject.put("title", article.getAtcTitle());
         jsonObject.put("content", result);
-        HashMap<String, String> difficulty= new HashMap<>();
-        difficulty.put("D1", "하");
-        difficulty.put("D2", "중");
-        difficulty.put("D3", "상");
-        jsonObject.put("level", difficulty.get(article.getDifficulty()));
+        jsonObject.put("level", article.getDifficulty());
         jsonObject.put("author", article.getAtcWriter());
         return jsonObject;
 
