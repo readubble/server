@@ -1,7 +1,6 @@
 package com.capstone.server.Service;
 
 import com.capstone.server.DTO.DictDTO;
-import com.capstone.server.Domain.Dict;
 import com.capstone.server.Domain.Search;
 import com.capstone.server.Repository.DictRepository;
 import com.capstone.server.Repository.SearchRepository;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -42,7 +40,7 @@ class DictServiceTest {
 
     @Test
     void getDictInfoDB_test(){
-        when(dictRepository.findAllByWordNm("사과"))
+        when(dictRepository.findAllByWordNmStartingWith("사과"))
                 .thenReturn(List.of(dict1, dict2));
         List<DictDTO> result = dictService.getDictInfoDB("사과", "test123");
         assertThat(result.size()).isEqualTo(2);

@@ -3,6 +3,8 @@ package com.capstone.server.Controller;
 import com.capstone.server.DTO.DictDTO;
 import com.capstone.server.DTO.ResponseDTO.ListResultReponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResultResponseDTO;
+import com.capstone.server.Exception.ApiException;
+import com.capstone.server.Exception.ExceptionEnum;
 import com.capstone.server.Service.DictService;
 import com.capstone.server.Service.SaveWordService;
 import com.capstone.server.Service.SearchService;
@@ -34,11 +36,15 @@ public class WordController {
     public ListResultReponseDTO wordSearch(@RequestHeader("Authorization") String Authorization, @RequestBody JSONObject jsonObject){
         String userId = jsonObject.get("id").toString();
         String keyword = jsonObject.get("keyword").toString();
-        List<DictDTO> result = dictService.getDictInfoDB(keyword, userId);
-        return ListResultReponseDTO.builder()
-                .code(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(result).build();
+        try {
+            List<DictDTO> result = dictService.getDictInfo(keyword, userId);
+            return ListResultReponseDTO.builder()
+                    .code(HttpStatus.OK.value())
+                    .message(HttpStatus.OK.getReasonPhrase())
+                    .data(result).build();
+        } catch(Exception e){
+            throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
+        }
     }
 
     // 단어 북마크

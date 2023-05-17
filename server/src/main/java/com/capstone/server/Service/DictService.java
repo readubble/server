@@ -1,30 +1,25 @@
 package com.capstone.server.Service;
 
 import com.capstone.server.DTO.DictDTO;
-import com.capstone.server.Domain.Dict;
 import com.capstone.server.Domain.Search;
 import com.capstone.server.Etc.DictKey;
 import com.capstone.server.Repository.DictRepository;
 import com.capstone.server.Repository.SearchRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.asn1.cms.TimeStampAndCRL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -111,8 +106,10 @@ public class DictService {
                 DictDTO dictDTO = new DictDTO(tmp.get("target_code").asInt(), tmp.get("word").asText(), tmp.get("target_code").asInt(),
                         tmp.get("sense").get("definition").asText());
                 result.add(dictDTO);
-                Search search = new Search(userId, tmp.get("target_code").asInt(), "N", date);
-                searchRepository.save(search);
+                if(!searchRepository.existsByTbUserIdAndTbDictWordNo(userId, tmp.get("target_code").asInt())) {
+                    Search search = new Search(userId, tmp.get("target_code").asInt(), "N", date);
+                    searchRepository.save(search);
+                }
             }
             return result;
 
@@ -123,11 +120,13 @@ public class DictService {
     }
 
     public List<DictDTO> getDictInfoDB(String keyword, String userId){
-        List<DictDTO> result = dictRepository.findAllByWordNm(keyword);
+        List<DictDTO> result = dictRepository.findAllByWordNmStartingWith(keyword);
         Date date = new Date();
         for(int i=0; i<result.size(); i++){
-            Search search = new Search(userId, result.get(i).getWordNo(), "N", date);
-            searchRepository.save(search);
+            if(!searchRepository.existsByTbUserIdAndTbDictWordNo(userId, result.get(i).getTargetCode())) {
+                Search search = new Search(userId, result.get(i).getTargetCode(), "N", date);
+                searchRepository.save(search);
+            }
         }
         return result;
     }
