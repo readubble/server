@@ -47,7 +47,7 @@ public class SaveArticleService {
         // 이후, SaveArticle 테이블에서 현재 사용자가 해당 문제를 이미 북마크한 적이 있는지 확인합니다.
         // findByTbUserIdAndAndTbArticleId 메소드를 이용하여 tbUserId와 tbArticleId가 모두 일치하는 데이터를 검색하고
         // 결과를 saveArticleCheck 변수에 저장합니다.
-        if (saveArticleCheck) {
+        if (!saveArticleCheck) {
             // 만약 saveArticleCheck가 null인 경우, 즉 이전에 북마크한 적이 없는 경우 SaveArticle 객체를 생성하여 해당 정보를 저장
             SaveArticle saveArticle = SaveArticle.builder()
                     .tbUserId(userId)
@@ -59,13 +59,17 @@ public class SaveArticleService {
                     .genre(article.getGenre())
                     .build();
             saveArticleRepository.save(saveArticle);
+        }else{
+            deleteArticle(userId, articleId);
         }
     }
 
     // 삭제
     public void deleteArticle(String userId, int articleId) {
         SaveArticle saveArticles = saveArticleRepository.findByTbUserIdAndAndTbArticleId(userId, articleId);
-        saveArticleRepository.delete(saveArticles);
+        if(saveArticles!=null) {
+            saveArticleRepository.delete(saveArticles);
+        }
     }
 
     // getSavedWords 메서드는 findAllByTbUserId 메서드를 사용하여 해당 사용자가 저장한 단어를 조회

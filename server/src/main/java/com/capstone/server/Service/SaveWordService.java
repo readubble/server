@@ -45,7 +45,7 @@ public class SaveWordService {
         // tbUserId와 wordNm 필드가 일치하는 SaveWord 엔티티 객체를 조회
         // saveWordCheck 변수에는 tbUserId와 wordNm이 일치하는 SaveWord 엔티티 객체들의 리스트가 담겨지게 됩니다.
         // 이후 saveWordCheck 변수의 값에 따라서 저장된 데이터가 이미 있는지 여부를 판단하여 중복 저장을 방지할 수 있습니다.
-        if (dict != null && saveWordCheck) {
+        if (dict != null && !saveWordCheck) {
             // 2. dict가 null값이 아니라면, 즉 Dict 테이블에 단어가 존재하고, 이미 saveWord 테이블에 내가 저장할 Word가 있는지 체크
             int tbWordNo = dict.getWordNo(); // 단어의 word_no(pk)를 tbWordNo에 넣어준다. -> save_word에 저장
             // 3. Dict 테이블에 단어가 있으면서, 이 사용자가 북마크에 저장하지는 않은 단어이므로 => SaveWord 테이블에 저장
@@ -55,6 +55,8 @@ public class SaveWordService {
                     .wordNm(dict.getWordNm())
                     .build();
             saveWordRepository.save(saveWord); // saveWord객체를 save한다.
+        }else if(dict != null && saveWordCheck){
+            deleteWord(tbUserId, targetCode);
         }
     }
 
@@ -62,7 +64,9 @@ public class SaveWordService {
     // 삭제
     public void deleteWord(String userId, int targetCode) {
         SaveWord saveWord = saveWordRepository.findByTbUserIdAndTargetCode(userId, targetCode);
-        saveWordRepository.delete(saveWord);
+        if(saveWord!=null) {
+            saveWordRepository.delete(saveWord);
+        }
         // deleteBy
     }
 
