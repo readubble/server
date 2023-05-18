@@ -33,8 +33,8 @@ public class QuizController {
                 .data(wordQuizResult).build();
     }
 
-    @PostMapping("/quiz/{id}")
-    public ResponseDTO WordQuizSolve(@PathVariable("id") String userId, @RequestBody WordQuizRequestDTO wordQuizRequestDTO){
+    @PostMapping("/quiz")
+    public ResponseDTO WordQuizSolve(@RequestBody WordQuizRequestDTO wordQuizRequestDTO){
         wordQuizAnswerService.wordQuizSave(wordQuizRequestDTO);
         return ResponseDTO.builder()
                 .code(HttpStatus.OK.value())
