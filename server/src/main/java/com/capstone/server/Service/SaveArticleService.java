@@ -14,6 +14,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -66,9 +67,9 @@ public class SaveArticleService {
 
     // 삭제
     public void deleteArticle(String userId, int articleId) {
-        SaveArticle saveArticles = saveArticleRepository.findByTbUserIdAndAndTbArticleId(userId, articleId);
-        if(saveArticles!=null) {
-            saveArticleRepository.delete(saveArticles);
+        Optional<SaveArticle> saveArticles = saveArticleRepository.findByTbUserIdAndAndTbArticleId(userId, articleId);
+        if(saveArticles.isPresent()) {
+            saveArticleRepository.delete(saveArticles.get());
         }
     }
 
@@ -78,8 +79,8 @@ public class SaveArticleService {
         return saveArticleRepository.findAllByTbUserId(userId);
     }
 
-    public List<ArticleDTO> saveArticleList(String userId){
-        List<SaveArticle> saveList = getSavedArticle(userId);
+    public List<ArticleDTO> saveArticleList(String userId, int cgId){
+        List<SaveArticle> saveList = saveArticleRepository.findAllByTbUserIdAndAndCgNo(userId, cgId);
         List<ArticleDTO> result = new ArrayList<>();
         for(int i=0; i<saveList.size(); i++){
             Article article = articleRepository.findById(saveList.get(i).getTbArticleId());

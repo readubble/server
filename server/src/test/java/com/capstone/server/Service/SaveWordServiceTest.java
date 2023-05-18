@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -76,7 +77,7 @@ class SaveWordServiceTest {
     void deleteWord() {
         // given
         SaveWord saveWord = new SaveWord(1, "test123",123,"배");
-        when(saveWordRepository.findByTbUserIdAndTargetCode(anyString(), anyInt())).thenReturn(saveWord);
+        when(saveWordRepository.findByTbUserIdAndTargetCode(anyString(), anyInt())).thenReturn(Optional.of(saveWord));
 
         // when
         saveWordService.deleteWord("test123", 123);

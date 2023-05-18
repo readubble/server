@@ -204,7 +204,7 @@ class ProblemControllerTest {
     @Test
     @WithUserDetails("test123")
     public void problemBookmarkList_test() throws Exception{
-        when(saveArticleService.saveArticleList("test123"))
+        when(saveArticleService.saveArticleList("test123", 1))
                 .thenReturn(List.of(ArticleDTO.builder()
                         .atcTitle("test").build()));
         mvc.perform(get("/problem/bookmark/users/test123")

@@ -48,7 +48,7 @@ class SaveWordRepositoryTest {
 
     @Test
     void findByTbUserIdAndTargetCode() {
-        SaveWord result = saveWordRepository.findByTbUserIdAndTargetCode("test123", 123);
+        SaveWord result = saveWordRepository.findByTbUserIdAndTargetCode("test123", 123).get();
         assertThat(result.getTargetCode()).isEqualTo(123);
     }
 
@@ -56,6 +56,15 @@ class SaveWordRepositoryTest {
     void findAllByTbUserId() {
         List<SaveWord> result = saveWordRepository.findAllByTbUserId("test123");
         assertThat(result.size()).isEqualTo(3);
+    }
+
+    @Test
+    void deleteTest(){
+        boolean result = saveWordRepository.existsByTbUserIdAndTargetCode(saveWord1.getTbUserId(), saveWord1.getTargetCode());
+        assertTrue(result);
+        saveWordRepository.delete(saveWord1);
+        result = saveWordRepository.existsByTbUserIdAndTargetCode(saveWord1.getTbUserId(), saveWord1.getTargetCode());
+        assertFalse(result);
     }
 
     @Test
