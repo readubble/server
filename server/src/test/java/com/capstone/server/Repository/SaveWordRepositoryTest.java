@@ -34,9 +34,9 @@ class SaveWordRepositoryTest {
 
     @BeforeAll
     static void setup() {
-        saveWord1 = new SaveWord(1, "test123", 123, "사과");
-        saveWord2 = new SaveWord(2, "test123", 456, "배");
-        saveWord3 = new SaveWord(3, "test123", 789, "오렌지");
+        saveWord1 = new SaveWord(1, "test123", 123, "사과","");
+        saveWord2 = new SaveWord(2, "test123", 456, "배","");
+        saveWord3 = new SaveWord(3, "test123", 789, "오렌지","");
     }
 
     @BeforeEach
