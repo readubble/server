@@ -64,7 +64,7 @@ class SaveArticleRepositoryTest {
         saveArticleRepository.save(saveArticle1);
         saveArticleRepository.save(saveArticle2);
         saveArticleRepository.save(saveArticle3);
-        SaveArticle saveArticle = saveArticleRepository.findByTbUserIdAndAndTbArticleId("test123", 1);
+        SaveArticle saveArticle = saveArticleRepository.findByTbUserIdAndAndTbArticleId("test123", 1).get();
         assertThat(saveArticle.getTbArticleId()).isEqualTo(1);
         assertThat(saveArticle.getTbUserId()).isEqualTo("test123");
     }

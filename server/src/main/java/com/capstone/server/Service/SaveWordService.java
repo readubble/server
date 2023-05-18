@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -63,9 +64,9 @@ public class SaveWordService {
     // deleteWord 메서드는 findByTbUserIdAndWordNm 메서드를 사용하여 저장된 단어를 찾고, deleteAll 메서드를 이용해 해당 단어를 삭제
     // 삭제
     public void deleteWord(String userId, int targetCode) {
-        SaveWord saveWord = saveWordRepository.findByTbUserIdAndTargetCode(userId, targetCode);
-        if(saveWord!=null) {
-            saveWordRepository.delete(saveWord);
+        Optional<SaveWord> saveWord = saveWordRepository.findByTbUserIdAndTargetCode(userId, targetCode);
+        if(saveWord.isPresent()) {
+            saveWordRepository.delete(saveWord.get());
         }
         // deleteBy
     }

@@ -98,8 +98,8 @@ public class ProblemController {
     }
 
     @GetMapping("/problem/bookmark/users/{user-id}")
-    public ListResultReponseDTO problemBookmarkList(@PathVariable("user-id") String id){
-        List<ArticleDTO> result = saveArticleService.saveArticleList(id);
+    public ListResultReponseDTO problemBookmarkList(@PathVariable("user-id") String id, @RequestParam("category") int cgId){
+        List<ArticleDTO> result = saveArticleService.saveArticleList(id, cgId);
         return ListResultReponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
