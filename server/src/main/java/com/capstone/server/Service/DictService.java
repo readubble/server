@@ -2,9 +2,11 @@ package com.capstone.server.Service;
 
 import com.capstone.server.DTO.DictDTO;
 import com.capstone.server.DTO.ResponseDTO.DictResponseDTO;
+import com.capstone.server.Domain.SaveWord;
 import com.capstone.server.Domain.Search;
 import com.capstone.server.Etc.DictKey;
 import com.capstone.server.Repository.DictRepository;
+import com.capstone.server.Repository.SaveWordRepository;
 import com.capstone.server.Repository.SearchRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,10 +30,12 @@ import java.util.*;
 public class DictService {
     private final DictRepository dictRepository;
     private final SearchRepository searchRepository;
+    private final SaveWordRepository saveWordRepository;
     @Autowired
-    public DictService(DictRepository dictRepository, SearchRepository searchRepository){
+    public DictService(DictRepository dictRepository, SearchRepository searchRepository, SaveWordRepository saveWordRepository){
         this.dictRepository = dictRepository;
         this.searchRepository = searchRepository;
+        this.saveWordRepository = saveWordRepository;
     }
 
     @Builder
@@ -101,21 +105,22 @@ public class DictService {
             Iterator<JsonNode> items = jsonNode.get("channel").get("item").iterator();
             while(items.hasNext()){
                 JsonNode tmp = items.next();
-                DictResponseDTO dictResponseDTO;
+                DictResponseDTO dictResponseDTO= new DictResponseDTO(tmp.get("target_code").asInt(), tmp.get("word").asText(),
+                        tmp.get("sense").get("definition").asText(), "N");;
 //                DictDTO dictDTO = new DictDTO(tmp.get("target_code").asInt(), tmp.get("word").asText(), tmp.get("target_code").asInt(),
 //                        tmp.get("sense").get("definition").asText());
                 Optional<Search> search = searchRepository.findByTbUserIdAndTbDictWordNo(userId, tmp.get("target_code").asInt());
                 if(search.isEmpty()) {
                     Search searchObj = new Search(userId, tmp.get("target_code").asInt(), "N", date);
                     searchRepository.save(searchObj);
-                    dictResponseDTO = new DictResponseDTO(tmp.get("target_code").asInt(), tmp.get("word").asText(),
-                            tmp.get("sense").get("definition").asText(), "N");
-                    result.add(dictResponseDTO);
+
                 }else{
-                    dictResponseDTO = new DictResponseDTO(tmp.get("target_code").asInt(), tmp.get("word").asText(),
-                            tmp.get("sense").get("definition").asText(), search.get().getSaveFl());
-                    result.add(dictResponseDTO);
+                    Optional<SaveWord> saveWord = saveWordRepository.findByTbUserIdAndTargetCodeAndWordNmAndWordMean(userId, tmp.get("target_code").asInt(), tmp.get("word").asText(),tmp.get("sense").get("definition").asText());
+                    if(saveWord.isPresent()){
+                        dictResponseDTO.setSaveFl("Y");
+                    }
                 }
+                result.add(dictResponseDTO);
             }
             return result;
 
@@ -131,21 +136,21 @@ public class DictService {
         Date date = new Date();
         for(int i=0; i<result.size(); i++){
             Optional<Search> search = searchRepository.findByTbUserIdAndTbDictWordNo(userId, result.get(i).getTargetCode());
+            DictResponseDTO dictResponseDTO = DictResponseDTO.builder()
+                    .targetCode(result.get(i).getTargetCode())
+                    .wordNm(result.get(i).getWordNm())
+                    .wordMean(result.get(i).getWordMean())
+                    .saveFl("N").build();
             if(search.isEmpty()) {
                 Search searchObj = new Search(userId, result.get(i).getTargetCode(), "N", date);
                 searchRepository.save(searchObj);
-                responseResult.add(DictResponseDTO.builder()
-                        .targetCode(result.get(i).getTargetCode())
-                        .wordNm(result.get(i).getWordNm())
-                        .wordMean(result.get(i).getWordMean())
-                        .saveFl("N").build());
             }else{
-                responseResult.add(DictResponseDTO.builder()
-                        .targetCode(result.get(i).getTargetCode())
-                        .wordNm(result.get(i).getWordNm())
-                        .wordMean(result.get(i).getWordMean())
-                        .saveFl(search.get().getSaveFl()).build());
+                Optional<SaveWord> saveWord = saveWordRepository.findByTbUserIdAndTargetCodeAndWordNmAndWordMean(userId, result.get(i).getTargetCode(), result.get(i).getWordNm(),result.get(i).getWordMean());
+                if(saveWord.isPresent()){
+                    dictResponseDTO.setSaveFl("Y");
+                }
             }
+            responseResult.add(dictResponseDTO);
         }
         return responseResult;
     }
