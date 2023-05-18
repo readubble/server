@@ -72,6 +72,7 @@ public class TbReadService {
     public JSONObject getResult(int problemId, String userId){
         TbRead result = tbReadRepository.findByTbUserIdAndTbArticleId(userId, problemId);
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("problem_id", result.getTbArticleId());
         jsonObject.put("time", result.getTotalTime());
         jsonObject.put("keyword", List.of(result.getInpKwd1(), result.getInpKwd2(), result.getInpKwd3()));
         jsonObject.put("sentence", Arrays.asList(result.getInpTopic().split("[|]")));

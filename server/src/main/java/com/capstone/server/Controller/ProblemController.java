@@ -62,6 +62,7 @@ public class ProblemController {
         tbReadService.save(problemRequestDTO, id);
         String summarization = articleService.getSummarization(id);
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("problem_id", id);
         jsonObject.put("ai_summarization", summarization);
         return ResultResponseDTO.builder()
                 .code(HttpStatus.OK.value())
