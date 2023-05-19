@@ -102,7 +102,7 @@ class QuizAnswerRepositoryTest {
         articleRepository.save(article1);
         articleRepository.save(article2);
 
-        int result = quizAnswerRepository.countAllByCorrectFlIsAndTbUserIdJoinArticle("Y", "1");
+        int result = quizAnswerRepository.countAllByCorrectFlIsAndTbUserIdJoinArticle("Y", "test123", "1");
         assertThat(result).isEqualTo(2);
     }
 

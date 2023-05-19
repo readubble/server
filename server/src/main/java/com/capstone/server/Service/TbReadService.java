@@ -39,6 +39,11 @@ public class TbReadService {
         return result;
     }
 
+    public int ReadArticleInfo(String userId, String difficulty){
+        int result = tbReadRepository.countAllBySolveFlIsAndTbUserIdJoinArticle("Y", userId, difficulty);
+        return result;
+    }
+
     // 이 코드는 ProblemRequestDTO와 id값을 인자로 받아서 TbRead 테이블에 데이터를 저장하고, 그에 따른 QuizAnswer 데이터도 저장하는 함수
     public void save(ProblemRequestDTO problemRequestDTO, int id){
         TbRead tbRead = TbRead.builder()

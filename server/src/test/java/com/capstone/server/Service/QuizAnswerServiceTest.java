@@ -27,10 +27,10 @@ class QuizAnswerServiceTest {
 
     @Test
     void getUserQuizInfo_test(){
-        when(quizAnswerRepository.countAllByCorrectFlIsAndTbUserIdJoinArticle(anyString(), eq("D1")))
+        when(quizAnswerRepository.countAllByCorrectFlIsAndTbUserIdJoinArticle(anyString(), anyString(), eq("D1")))
                 .thenReturn(3);
 
-        when(quizAnswerRepository.countAllByCorrectFlIsAndTbUserIdJoinArticle(anyString(), eq("D2")))
+        when(quizAnswerRepository.countAllByCorrectFlIsAndTbUserIdJoinArticle(anyString(), anyString(), eq("D2")))
                 .thenReturn(2);
         int D1_result = quizAnswerService.getUserQuizInfo("test1234", "D1");
         int D2_result = quizAnswerService.getUserQuizInfo("test1234", "D2");

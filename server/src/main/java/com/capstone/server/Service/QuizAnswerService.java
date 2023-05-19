@@ -20,7 +20,7 @@ public class QuizAnswerService {
     }
 
     public int getUserQuizInfo(String userId, String difficulty){
-        int result = quizAnswerRepository.countAllByCorrectFlIsAndTbUserIdJoinArticle("Y", difficulty);
+        int result = quizAnswerRepository.countAllByCorrectFlIsAndTbUserIdJoinArticle("Y", userId, difficulty);
         return result;
     }
 }

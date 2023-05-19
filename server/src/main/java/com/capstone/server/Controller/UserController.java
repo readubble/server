@@ -132,7 +132,6 @@ public class UserController {
 
     @GetMapping("/users/{id}/statistics")
     public ListResultReponseDTO userStatisticsInfo(@PathVariable("id") String userId){
-        String[] difficulty = {"D1", "D2", "D3"};
         String[] result_difficulty = {"하", "중", "상"};
 
         List result = new ArrayList();
@@ -140,7 +139,7 @@ public class UserController {
 
         for(int i=0; i<3; i++) {
             JSONObject jsonObject = new JSONObject();
-            num_result = quizAnswerService.getUserQuizInfo(userId, difficulty[i]);
+            num_result = tbReadService.ReadArticleInfo(userId, result_difficulty[i]);
             jsonObject.put("level", result_difficulty[i]);
             jsonObject.put("num", num_result);
             result.add(jsonObject);
