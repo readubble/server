@@ -65,7 +65,7 @@ class SaveWordServiceTest {
         when(saveWordRepository.existsByTbUserIdAndTargetCode(anyString(), anyInt())).thenReturn(true);
 
         // when
-        saveWordService.saveWord("test123", 123);
+        saveWordService.saveWord("test123", 123,"","");
 
         // then
         verify(dictRepository, times(1)).findByTargetCode(anyInt());
@@ -76,11 +76,11 @@ class SaveWordServiceTest {
     @Test
     void deleteWord() {
         // given
-        SaveWord saveWord = new SaveWord(1, "test123",123,"배");
+        SaveWord saveWord = new SaveWord(1, "test123",123,"배","");
         when(saveWordRepository.findByTbUserIdAndTargetCode(anyString(), anyInt())).thenReturn(Optional.of(saveWord));
 
         // when
-        saveWordService.deleteWord("test123", 123);
+        saveWordService.deleteWord(saveWord);
 
         // then
         verify(saveWordRepository, times(1)).findByTbUserIdAndTargetCode(anyString(), anyInt());
@@ -90,8 +90,8 @@ class SaveWordServiceTest {
     @Test
     void getSaveWords() {
         // given
-        SaveWord saveWord1 = new SaveWord(1, "test123",123,"배");
-        SaveWord saveWord2 = new SaveWord(2, "test123",456,"사과");
+        SaveWord saveWord1 = new SaveWord(1, "test123",123,"배","");
+        SaveWord saveWord2 = new SaveWord(2, "test123",456,"사과","");
         List<SaveWord> saveWords = new ArrayList<>();
         saveWords.add(saveWord1);
         saveWords.add(saveWord2);
@@ -110,10 +110,8 @@ class SaveWordServiceTest {
     void SaveWordList_test(){
         when(saveWordRepository.findAllByTbUserId(anyString()))
                 .thenReturn(List.of(SaveWord.builder().targetCode(123).build()));
-        when(dictRepository.findByTargetCode(123))
-                .thenReturn(Dict.builder().targetCode(123).build());
 
-        List<DictDTO> result = saveWordService.SaveWordList("test123");
+        List<SaveWord> result = saveWordService.SaveWordList("test123");
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0).getTargetCode()).isEqualTo(123);
     }

@@ -2,6 +2,7 @@ package com.capstone.server.Controller;
 
 import com.capstone.server.DTO.DictDTO;
 import com.capstone.server.DTO.ResponseDTO.DictResponseDTO;
+import com.capstone.server.Domain.SaveWord;
 import com.capstone.server.Domain.User;
 import com.capstone.server.Repository.UserRepository;
 import com.capstone.server.Service.ArticleService;
@@ -104,8 +105,9 @@ class WordControllerTest {
     @Test
     @WithUserDetails("test123")
     public void wordBookmarkListTest() throws Exception{
+        SaveWord saveWord = new SaveWord(1,"test123",123,"","");
         when(saveWordService.SaveWordList("test123"))
-                .thenReturn(List.of(DictDTO.builder().targetCode(123).build()));
+                .thenReturn(List.of(saveWord));
         mvc.perform(get("/word/bookmark/users/test123")
                         .header("Authorization",""))
                 .andExpect(status().isOk())

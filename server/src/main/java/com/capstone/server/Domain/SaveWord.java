@@ -18,12 +18,14 @@ public class SaveWord {
     private String tbUserId;
     private int targetCode;
     private String wordNm;
+    private String wordMean;
 
     @Builder
-    public SaveWord(int saveNo, String tbUserId, int targetCode, String wordNm) {
+    public SaveWord(int saveNo, String tbUserId, int targetCode, String wordNm, String wordMean) {
         this.saveNo = saveNo;
         this.tbUserId = tbUserId;
         this.targetCode = targetCode;
         this.wordNm = wordNm;
+        this.wordMean = wordMean;
     }
 }

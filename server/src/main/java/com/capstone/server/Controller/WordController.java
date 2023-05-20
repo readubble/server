@@ -3,6 +3,7 @@ package com.capstone.server.Controller;
 import com.capstone.server.DTO.DictDTO;
 import com.capstone.server.DTO.ResponseDTO.DictResponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ListResultReponseDTO;
+import com.capstone.server.DTO.ResponseDTO.ResponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResultResponseDTO;
 import com.capstone.server.Domain.SaveWord;
 import com.capstone.server.Exception.ApiException;
@@ -51,23 +52,25 @@ public class WordController {
 
     // 단어 북마크
     @PostMapping ("/word/{word-id}/bookmark")
-    public ResultResponseDTO wordBookmark(@PathVariable("word-id") int wordId, @RequestBody JSONObject jsonObject){
+    public ResponseDTO wordBookmark(@PathVariable("word-id") int wordId, @RequestBody JSONObject jsonObject){
 //     1. Authorization에 토큰 저장 / wordId에 word_id 저장 / BodyParameter는 JSONObject로 받아옴
         String userId = jsonObject.get("user_id").toString();
-        searchService.updateSaveFl(userId, wordId);
+        String wordNm = jsonObject.get("word_nm").toString();
+        String wordMean = jsonObject.get("word_mean").toString();
+        //searchService.updateSaveFl(userId, wordId, wordNm, wordMean);
 //     2. jsonObject(BodyParameter)의 user_id 객체를 String으로 변환하여 userId에 저장
-        saveWordService.saveWord(userId, wordId);
+        saveWordService.saveWord(userId, wordId, wordNm, wordMean);
 //     3. SaveWordService에 있는 saveWordBookMark 함수를 통해 SaveWord 테이블에 저장한다.
 //        (userId와 wordId를 통해서 저장)
 
-        return ResultResponseDTO.builder()
+        return ResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase()).build();
     }
 
     @GetMapping("/word/bookmark/users/{user-id}")
     public ListResultReponseDTO wordBookmarkList(@PathVariable("user-id") String id){
-        List<DictDTO> result = saveWordService.SaveWordList(id);
+        List<SaveWord> result = saveWordService.SaveWordList(id);
         return ListResultReponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

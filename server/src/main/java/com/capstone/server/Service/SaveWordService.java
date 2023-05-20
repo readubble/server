@@ -39,35 +39,31 @@ public class SaveWordService {
 //    private int tbWordNo;
 //    private String wordNm;
     // 저장
-    public void saveWord(String tbUserId, int targetCode) {
+    public void saveWord(String tbUserId, int targetCode, String wordNm, String wordMean) {
         // 1. Dict(단어)테이블에 wordNm(단어명)으로 검색을 쫙 하고 dict 변수에 넣어줌
-        Dict dict = dictRepository.findByTargetCode(targetCode);
-        Boolean saveWordCheck = saveWordRepository.existsByTbUserIdAndTargetCode(tbUserId, targetCode);
+        Optional<SaveWord> saveWord = saveWordRepository.findByTbUserIdAndTargetCodeAndWordNmAndWordMean(tbUserId, targetCode, wordNm, wordMean);
         // tbUserId와 wordNm 필드가 일치하는 SaveWord 엔티티 객체를 조회
         // saveWordCheck 변수에는 tbUserId와 wordNm이 일치하는 SaveWord 엔티티 객체들의 리스트가 담겨지게 됩니다.
         // 이후 saveWordCheck 변수의 값에 따라서 저장된 데이터가 이미 있는지 여부를 판단하여 중복 저장을 방지할 수 있습니다.
-        if (dict != null && !saveWordCheck) {
+        if (saveWord.isEmpty()) {
             // 2. dict가 null값이 아니라면, 즉 Dict 테이블에 단어가 존재하고, 이미 saveWord 테이블에 내가 저장할 Word가 있는지 체크
-            int tbWordNo = dict.getWordNo(); // 단어의 word_no(pk)를 tbWordNo에 넣어준다. -> save_word에 저장
             // 3. Dict 테이블에 단어가 있으면서, 이 사용자가 북마크에 저장하지는 않은 단어이므로 => SaveWord 테이블에 저장
-            SaveWord saveWord = SaveWord.builder() // builider()는 생성자 파라미터를 주입하고 엔티티 객체를 생성해주는 메소드
+            SaveWord saveWordObj = SaveWord.builder() // builider()는 생성자 파라미터를 주입하고 엔티티 객체를 생성해주는 메소드
                     .tbUserId(tbUserId)
                     .targetCode(targetCode)
-                    .wordNm(dict.getWordNm())
+                    .wordNm(wordNm)
+                    .wordMean(wordMean)
                     .build();
-            saveWordRepository.save(saveWord); // saveWord객체를 save한다.
-        }else if(dict != null && saveWordCheck){
-            deleteWord(tbUserId, targetCode);
+            saveWordRepository.save(saveWordObj); // saveWord객체를 save한다.
+        }else if(saveWord.isPresent()){
+            deleteWord(saveWord.get());
         }
     }
 
     // deleteWord 메서드는 findByTbUserIdAndWordNm 메서드를 사용하여 저장된 단어를 찾고, deleteAll 메서드를 이용해 해당 단어를 삭제
     // 삭제
-    public void deleteWord(String userId, int targetCode) {
-        Optional<SaveWord> saveWord = saveWordRepository.findByTbUserIdAndTargetCode(userId, targetCode);
-        if(saveWord.isPresent()) {
-            saveWordRepository.delete(saveWord.get());
-        }
+    public void deleteWord(SaveWord saveWord) {
+        saveWordRepository.delete(saveWord);
         // deleteBy
     }
 
@@ -77,14 +73,8 @@ public class SaveWordService {
         return saveWordRepository.findAllByTbUserId(userId);
     }
 
-    public List<DictDTO> SaveWordList(String userId){
+    public List<SaveWord> SaveWordList(String userId){
         List<SaveWord> saveList = getSavedWords(userId);
-        List<DictDTO> result = new ArrayList<>();
-        for(int i=0; i<saveList.size(); i++){
-            Dict dict = dictRepository.findByTargetCode(saveList.get(i).getTargetCode());
-            DictDTO dictDTO = DictDTO.builder().build();
-            result.add(dictDTO.fromEntity(dict));
-        }
-        return result;
+        return saveList;
     }
 }

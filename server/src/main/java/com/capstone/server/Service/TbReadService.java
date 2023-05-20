@@ -39,6 +39,11 @@ public class TbReadService {
         return result;
     }
 
+    public int ReadArticleInfo(String userId, String difficulty){
+        int result = tbReadRepository.countAllBySolveFlIsAndTbUserIdJoinArticle("Y", userId, difficulty);
+        return result;
+    }
+
     // 이 코드는 ProblemRequestDTO와 id값을 인자로 받아서 TbRead 테이블에 데이터를 저장하고, 그에 따른 QuizAnswer 데이터도 저장하는 함수
     public void save(ProblemRequestDTO problemRequestDTO, int id){
         TbRead tbRead = TbRead.builder()
@@ -72,6 +77,7 @@ public class TbReadService {
     public JSONObject getResult(int problemId, String userId){
         TbRead result = tbReadRepository.findByTbUserIdAndTbArticleId(userId, problemId);
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("problem_id", result.getTbArticleId());
         jsonObject.put("time", result.getTotalTime());
         jsonObject.put("keyword", List.of(result.getInpKwd1(), result.getInpKwd2(), result.getInpKwd3()));
         jsonObject.put("sentence", Arrays.asList(result.getInpTopic().split("[|]")));

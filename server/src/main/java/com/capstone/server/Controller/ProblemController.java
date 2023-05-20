@@ -4,6 +4,7 @@ import com.capstone.server.DTO.ArticleDTO;
 import com.capstone.server.DTO.RequestDTO.ProblemRequestDTO;
 import com.capstone.server.DTO.ResponseDTO.ListResultReponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ProblemResponseDTO;
+import com.capstone.server.DTO.ResponseDTO.ResponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResultResponseDTO;
 import com.capstone.server.Interface.ArticleInterface;
 import com.capstone.server.Service.ArticleService;
@@ -61,6 +62,7 @@ public class ProblemController {
         tbReadService.save(problemRequestDTO, id);
         String summarization = articleService.getSummarization(id);
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("problem_id", id);
         jsonObject.put("ai_summarization", summarization);
         return ResultResponseDTO.builder()
                 .code(HttpStatus.OK.value())
@@ -80,7 +82,7 @@ public class ProblemController {
 
     // 글 북마크
     @PostMapping("/problem/{problem_id}/bookmark")
-    public ResultResponseDTO problemBookmark(@PathVariable("problem_id") int problemId, @RequestBody JSONObject jsonObject){
+    public ResponseDTO problemBookmark(@PathVariable("problem_id") int problemId, @RequestBody JSONObject jsonObject){
         //     1. Authorization에 토큰 저장 / problemId에 problem_id 저장 / BodyParameter는 JSONObject로 받아옴
         //     2. jsonObject(BodyParameter)의 user_id 객체를 String으로 변환하여 userId에 저장
         String userId = jsonObject.get("user_id").toString();
@@ -92,7 +94,7 @@ public class ProblemController {
         //     4. saveArticle에  글 저장하기
         saveArticleService.ArticleBookMark(userId, problemId);
 
-        return ResultResponseDTO.builder()
+        return ResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase()).build();
     }

@@ -12,13 +12,15 @@ public class SaveWordDTO {
     private String tbUserId;
     private int targetCode;
     private String wordNm;
+    private String wordMean;
 
     @Builder
-    public SaveWordDTO(int saveNo, String tbUserId, int targetCode, String wordNm) {
+    public SaveWordDTO(int saveNo, String tbUserId, int targetCode, String wordNm, String wordMean) {
         this.saveNo = saveNo;
         this.tbUserId = tbUserId;
         this.targetCode = targetCode;
         this.wordNm = wordNm;
+        this.wordMean = wordMean;
     }
 
     public SaveWord toEntity(){
@@ -26,7 +28,8 @@ public class SaveWordDTO {
                 .saveNo(saveNo)
                 .tbUserId(tbUserId)
                 .targetCode(targetCode)
-                .wordNm(wordNm).build();
+                .wordNm(wordNm)
+                .wordMean(wordMean).build();
     }
 
     public SaveWordDTO fromEntity(SaveWord saveWord){
@@ -34,6 +37,7 @@ public class SaveWordDTO {
                 .saveNo(saveWord.getSaveNo())
                 .tbUserId(saveWord.getTbUserId())
                 .targetCode(saveWord.getTargetCode())
-                .wordNm(saveWord.getWordNm()).build();
+                .wordNm(saveWord.getWordNm())
+                .wordMean(saveWord.getWordMean()).build();
     }
 }

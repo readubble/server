@@ -12,6 +12,6 @@ public interface QuizAnswerRepository extends JpaRepository<QuizAnswer, String> 
 
     int countAllByCorrectFlIsAndTbUserId(String correctFl, String TbUserId);
 
-    @Query("SELECT count(q) FROM QuizAnswer q left outer join Article a on q.tbArticleId = a.id where q.correctFl= :correct and a.difficulty = :difficulty")
-    int countAllByCorrectFlIsAndTbUserIdJoinArticle(String correct, String difficulty);
+    @Query("SELECT count(q) FROM QuizAnswer q left outer join Article a on q.tbArticleId = a.id where q.correctFl= :correct and a.difficulty = :difficulty and q.tbUserId = :tbUserId")
+    int countAllByCorrectFlIsAndTbUserIdJoinArticle(String correct, String tbUserId, String difficulty);
 }
