@@ -1,13 +1,11 @@
 package com.capstone.server.Controller;
 
-import com.capstone.server.DTO.TbReadDTO;
 import com.capstone.server.DTO.RequestDTO.JoinRequestDTO;
 import com.capstone.server.DTO.ResponseDTO.ListResultReponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResultResponseDTO;
 import com.capstone.server.DTO.TokenDTO;
 import com.capstone.server.DTO.UserDTO;
-import com.capstone.server.Domain.TbRead;
 import com.capstone.server.Etc.JsonRequestWrapper;
 import com.capstone.server.Interface.TbReadInterface;
 import com.capstone.server.JWT.JwtProperties;
@@ -57,26 +55,26 @@ public class UserController {
     @PostMapping("/users/authorize")
     public void login(JsonRequestWrapper request, HttpServletResponse response) throws IOException{
         String userId = response.getHeader("id");
-        TokenDTO dto = TokenDTO.builder()
+        TokenDTO tokenDTO = TokenDTO.builder()
                 .userId(userId)
                 .token(response.getHeader(JwtProperties.REFRESH_HEADER_STRING))
                 .status(true).build();
-        tokenService.TokenSave(dto);
+        tokenService.TokenSave(tokenDTO);
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("access_token", response.getHeader(JwtProperties.ACCESS_HEADER_STRING));
-        jsonObject.put("refresh_token", response.getHeader(JwtProperties.REFRESH_HEADER_STRING));
+        JSONObject messageBody = new JSONObject();
+        messageBody.put("access_token", response.getHeader(JwtProperties.ACCESS_HEADER_STRING));
+        messageBody.put("refresh_token", response.getHeader(JwtProperties.REFRESH_HEADER_STRING));
 
-        ObjectMapper om = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         ResultResponseDTO responseDTO = ResultResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(jsonObject).build();
+                .data(messageBody).build();
 
         response.reset();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        String result = om.writeValueAsString(responseDTO);
+        String result = objectMapper.writeValueAsString(responseDTO);
         response.getWriter().write(result);
     }
 
@@ -84,30 +82,30 @@ public class UserController {
     public ResultResponseDTO autoLogin(@RequestHeader("Authorization") String Authorization){
         String userId = tokenService.getUsername(Authorization.replace(JwtProperties.TOKEN_PREFIX, ""));
         userService.AutoLogin(userId);
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("user_id", userId);
+        JSONObject messageBody = new JSONObject();
+        messageBody.put("user_id", userId);
         return ResultResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(jsonObject).build();
+                .data(messageBody).build();
     }
 
     @PostMapping("/users/authorize/token")
-    public ResultResponseDTO tokenRenew(@RequestHeader("Authorization") String Authorization, @RequestBody JSONObject jsonObject, HttpServletResponse response, HttpServletRequest request){
+    public ResultResponseDTO tokenRenew(@RequestHeader("Authorization") String Authorization, @RequestBody JSONObject requestMessageBody, HttpServletResponse response, HttpServletRequest request){
         String userId = tokenService.getUsername(Authorization.replaceFirst("Bearer ",""));
-        String RefreshToken = jsonObject.get("refresh_token").toString();
+        String RefreshToken = requestMessageBody.get("refresh_token").toString();
         String accessToken = tokenService.TokenRenew(RefreshToken, userId);
-        JSONObject result = new JSONObject();
-        result.put("access_token", accessToken);
+        JSONObject messageBody = new JSONObject();
+        messageBody.put("access_token", accessToken);
         return ResultResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(result).build();
+                .data(messageBody).build();
     }
 
     @PostMapping("/users/logout")
-    public ResponseDTO logout(@RequestHeader("Authorization") String Authorization, @RequestBody JSONObject jsonObject){
-        String userId = jsonObject.get("user_id").toString();
+    public ResponseDTO logout(@RequestHeader("Authorization") String Authorization, @RequestBody JSONObject requestMessageBody){
+        String userId = requestMessageBody.get("user_id").toString();
         tokenService.TokenUpdate(userId, Authorization);
         return ResponseDTO.builder()
                 .code(HttpStatus.OK.value())
@@ -117,69 +115,69 @@ public class UserController {
     @GetMapping("/users/{id}")
     public ResultResponseDTO userInfo(@PathVariable("id") String userId){
         UserDTO userDTO = userService.getUserInfo(userId);
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("nickname", userDTO.getUserNm());
+        JSONObject messageBody = new JSONObject();
+        messageBody.put("nickname", userDTO.getUserNm());
         SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd");
-        jsonObject.put("date", format.format(userDTO.getJoinDt()));
-        jsonObject.put("level", userDTO.getUserLevel());
-        jsonObject.put("exp", userDTO.getUserExp());
-        jsonObject.put("profile", userDTO.getUserPhotoIn());
+        messageBody.put("date", format.format(userDTO.getJoinDt()));
+        messageBody.put("level", userDTO.getUserLevel());
+        messageBody.put("exp", userDTO.getUserExp());
+        messageBody.put("profile", userDTO.getUserPhotoIn());
         return ResultResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(jsonObject).build();
+                .data(messageBody).build();
     }
 
     @GetMapping("/users/{id}/statistics")
     public ListResultReponseDTO userStatisticsInfo(@PathVariable("id") String userId){
-        String[] result_difficulty = {"하", "중", "상"};
+        String[] articleDifficulty = {"하", "중", "상"};
 
-        List result = new ArrayList();
+        List messageBodies = new ArrayList();
         int num_result;
 
         for(int i=0; i<3; i++) {
-            JSONObject jsonObject = new JSONObject();
-            num_result = tbReadService.ReadArticleInfo(userId, result_difficulty[i]);
-            jsonObject.put("level", result_difficulty[i]);
-            jsonObject.put("num", num_result);
-            result.add(jsonObject);
+            JSONObject messageBody = new JSONObject();
+            num_result = tbReadService.ReadArticleInfo(userId, articleDifficulty[i]);
+            messageBody.put("level", articleDifficulty[i]);
+            messageBody.put("num", num_result);
+            messageBodies.add(messageBody);
         }
 
         return ListResultReponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(result).build();
+                .data(messageBodies).build();
     }
 
     @GetMapping("/users/{id}/problem")
-    public ListResultReponseDTO userProblemInfo(@PathVariable("id") String userId, @RequestParam(name="level", required=true) String difficulty, @RequestParam(name="page", required = false, defaultValue = "0") int page, @RequestParam(name="size", required = false, defaultValue = "5") int size){
-        List<TbReadInterface> result = tbReadService.getUserReadInfo(userId, difficulty, page, size);
+    public ListResultReponseDTO userResolvedProblemInfo(@PathVariable("id") String userId, @RequestParam(name="level", required=true) String difficulty, @RequestParam(name="page", required = false, defaultValue = "0") int page, @RequestParam(name="size", required = false, defaultValue = "5") int size){
+        List<TbReadInterface> messageBody = tbReadService.getUserReadInfo(userId, difficulty, page, size);
         return ListResultReponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(result).build();
+                .data(messageBody).build();
     }
 
     @GetMapping("/users/{id}/quiz")
-    public ResultResponseDTO userQuizInformation(@PathVariable("id") String userId){
+    public ResultResponseDTO userWordQuizResult(@PathVariable("id") String userId){
         String result = wordQuizAnswerService.wordQuizInfo(userId);
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("result", result);
+        JSONObject messageBody = new JSONObject();
+        messageBody.put("result", result);
         return ResultResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(jsonObject).build();
+                .data(messageBody).build();
     }
 
     @PostMapping("/users/{id}/profile")
-    public ResultResponseDTO profile(@PathVariable("id") String id, @RequestPart(value="file") MultipartFile file){
+    public ResultResponseDTO userChangeProfile(@PathVariable("id") String id, @RequestPart(value="file") MultipartFile file){
         String url = userService.uploadFile(id, file);
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("url", url);
+        JSONObject messageBody = new JSONObject();
+        messageBody.put("url", url);
         return ResultResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(jsonObject).build();
+                .data(messageBody).build();
 
     }
 }

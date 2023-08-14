@@ -25,16 +25,16 @@ public class QuizController {
     }
 
     @GetMapping("/quiz/{id}")
-    public ListResultReponseDTO WordQuizList(@PathVariable("id") String userId){
-        List<WordQuizResultDTO> wordQuizResult = wordQuizService.wordQuizList(userId);
+    public ListResultReponseDTO wordQuizzes(@PathVariable("id") String userId){
+        List<WordQuizResultDTO> messageBody = wordQuizService.wordQuizList(userId);
         return ListResultReponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(wordQuizResult).build();
+                .data(messageBody).build();
     }
 
     @PostMapping("/quiz")
-    public ResponseDTO WordQuizSolve(@RequestBody WordQuizRequestDTO wordQuizRequestDTO){
+    public ResponseDTO wordQuizResolve(@RequestBody WordQuizRequestDTO wordQuizRequestDTO){
         wordQuizAnswerService.wordQuizSave(wordQuizRequestDTO);
         return ResponseDTO.builder()
                 .code(HttpStatus.OK.value())

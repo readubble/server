@@ -16,12 +16,12 @@ public class ProblemResponseDTO {
     @Getter
     @Setter
     public static class Data{
-        private JSONObject problem;
-        private List quiz;
+        private JSONObject article;
+        private List exercises;
         @Builder
-        public Data(JSONObject problem, List quiz){
-            this.problem = problem;
-            this.quiz = quiz;
+        public Data(JSONObject article, List exercises){
+            this.article = article;
+            this.exercises = exercises;
         }
     }
 
