@@ -68,14 +68,14 @@ public class UserService {
                 .role(user.getRole())
                 .build());
 
-        tokenService.TokenSave(TokenDTO.builder()
+        tokenService.saveToken(TokenDTO.builder()
                 .userId(user.getId())
                 .token("")
                 .status(false)
                 .build());
     }
 
-    public void AutoLogin(String userId){
+    public void autoLogin(String userId){
         //이후 fcmToken등의 부가적인 처리를 할 가능성이 있기 때문에, controller단에서 바로 tokenService.getLoginStatus를 부르지 않고
         //userService에서 tokenService를 부르는 형식으로 구현함.
         //로그아웃 처리 방식에 따라 달라지기 때문에, auto login의 경우 login status 처리가 필요없을 수도 있음. (차후에 수정)
@@ -104,6 +104,7 @@ public class UserService {
                             .withCannedAcl(CannedAccessControlList.PublicRead)
             );
             uploadFileUrl = amazonS3Client.getUrl(bucketName, keyName).toString();
+
             User user = userRepository.findById(id).get();
             UserDTO userDTO = new UserDTO();
             userDTO = userDTO.fromEntity(user);

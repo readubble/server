@@ -1,18 +1,12 @@
 package com.capstone.server.Service;
 
-import com.capstone.server.DTO.DictDTO;
-import com.capstone.server.DTO.SaveWordDTO;
-import com.capstone.server.Domain.Dict;
 import com.capstone.server.Domain.SaveWord;
-import com.capstone.server.Domain.WordQuiz;
 import com.capstone.server.Repository.DictRepository;
 import com.capstone.server.Repository.SaveWordRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Id;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +33,7 @@ public class SaveWordService {
 //    private int tbWordNo;
 //    private String wordNm;
     // 저장
-    public void saveWord(String tbUserId, int targetCode, String wordNm, String wordMean) {
+    public void bookmarkWord(String tbUserId, int targetCode, String wordNm, String wordMean) {
         // 1. Dict(단어)테이블에 wordNm(단어명)으로 검색을 쫙 하고 dict 변수에 넣어줌
         Optional<SaveWord> saveWord = saveWordRepository.findByTbUserIdAndTargetCodeAndWordNmAndWordMean(tbUserId, targetCode, wordNm, wordMean);
         // tbUserId와 wordNm 필드가 일치하는 SaveWord 엔티티 객체를 조회
@@ -56,25 +50,21 @@ public class SaveWordService {
                     .build();
             saveWordRepository.save(saveWordObj); // saveWord객체를 save한다.
         }else if(saveWord.isPresent()){
-            deleteWord(saveWord.get());
+            deleteBookmarkWord(saveWord.get());
         }
     }
 
     // deleteWord 메서드는 findByTbUserIdAndWordNm 메서드를 사용하여 저장된 단어를 찾고, deleteAll 메서드를 이용해 해당 단어를 삭제
     // 삭제
-    public void deleteWord(SaveWord saveWord) {
+    public void deleteBookmarkWord(SaveWord saveWord) {
         saveWordRepository.delete(saveWord);
         // deleteBy
     }
 
     // getSavedWords 메서드는 findAllByTbUserId 메서드를 사용하여 해당 사용자가 저장한 단어를 조회
     // 조회
-    public List<SaveWord> getSavedWords(String userId) {
-        return saveWordRepository.findAllByTbUserId(userId);
-    }
-
-    public List<SaveWord> SaveWordList(String userId){
-        List<SaveWord> saveList = getSavedWords(userId);
+    public List<SaveWord> getBookmarkWords(String userId){
+        List<SaveWord> saveList = saveWordRepository.findAllByTbUserId(userId);
         return saveList;
     }
 }

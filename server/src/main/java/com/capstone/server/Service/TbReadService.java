@@ -1,13 +1,10 @@
 package com.capstone.server.Service;
 
 import com.capstone.server.DTO.RequestDTO.ProblemRequestDTO;
-import com.capstone.server.DTO.TbReadDTO;
-import com.capstone.server.Domain.Quiz;
 import com.capstone.server.Domain.QuizAnswer;
 import com.capstone.server.Domain.TbRead;
 import com.capstone.server.Interface.TbReadInterface;
 import com.capstone.server.Repository.QuizAnswerRepository;
-import com.capstone.server.Repository.QuizRepository;
 import com.capstone.server.Repository.TbReadRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
@@ -32,20 +29,20 @@ public class TbReadService {
         this.articleService = articleService;
     }
 
-    public List<TbReadInterface> getUserReadInfo(String userId, String difficulty, int page, int size){
+    public List<TbReadInterface> getUserReadHistory(String userId, String difficulty, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         List<TbReadInterface> result = tbReadRepository.findAllByTbUserIdLEFTJOINArticle(userId, difficulty, pageable).toList();
 
         return result;
     }
 
-    public int ReadArticleInfo(String userId, String difficulty){
+    public int countReadArticles(String userId, String difficulty){
         int result = tbReadRepository.countAllBySolveFlIsAndTbUserIdJoinArticle("Y", userId, difficulty);
         return result;
     }
 
     // 이 코드는 ProblemRequestDTO와 id값을 인자로 받아서 TbRead 테이블에 데이터를 저장하고, 그에 따른 QuizAnswer 데이터도 저장하는 함수
-    public void save(ProblemRequestDTO problemRequestDTO, int id){
+    public void saveReadHistory(ProblemRequestDTO problemRequestDTO, int id){
         TbRead tbRead = TbRead.builder()
                 .tbUserId(problemRequestDTO.getUserId())
                 .tbArticleId(id)
@@ -62,7 +59,11 @@ public class TbReadService {
                 .build();
         tbReadRepository.save(tbRead); // TbRead 데이터 저장: tbRead 객체를 이용해 tbReadRepository에서 데이터를 저장합니다.
         // QuizAnswer 데이터 저장: quizAnswer 객체를 이용해 quizAnswerRepository에서 데이터를 저장합니다. 이 과정은 문제 수 만큼 반복됩니다.
-        for(int i=0; i<problemRequestDTO.getQuizChoice().size(); i++){
+        saveQuizHistory(problemRequestDTO, id);
+    }
+
+    private void saveQuizHistory(ProblemRequestDTO problemRequestDTO, int id) {
+        for(int i = 0; i< problemRequestDTO.getQuizChoice().size(); i++){
             QuizAnswer quizAnswer = QuizAnswer.builder()
                     .tbUserId(problemRequestDTO.getUserId())// QuizAnswer 객체 생성: problemRequestDTO에서 필요한 값을 가져와서 QuizAnswer 객체를 생성합니다.
                     .tbArticleId(id)
@@ -71,10 +72,9 @@ public class TbReadService {
                     .correctFl(problemRequestDTO.getQuizResult().get(i)).build();
             quizAnswerRepository.save(quizAnswer);
         }
-
     }
 
-    public JSONObject getResult(int problemId, String userId){
+    public JSONObject getReadResult(int problemId, String userId){
         TbRead result = tbReadRepository.findByTbUserIdAndTbArticleId(userId, problemId);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("problem_id", result.getTbArticleId());

@@ -6,13 +6,10 @@ import com.capstone.server.Domain.SaveWord;
 import com.capstone.server.Repository.DictRepository;
 import com.capstone.server.Repository.SaveWordRepository;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,13 +19,9 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.test.context.ContextConfiguration;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -65,7 +58,7 @@ class SaveWordServiceTest {
         when(saveWordRepository.existsByTbUserIdAndTargetCode(anyString(), anyInt())).thenReturn(true);
 
         // when
-        saveWordService.saveWord("test123", 123,"","");
+        saveWordService.bookmarkWord("test123", 123,"","");
 
         // then
         verify(dictRepository, times(1)).findByTargetCode(anyInt());
@@ -80,38 +73,38 @@ class SaveWordServiceTest {
         when(saveWordRepository.findByTbUserIdAndTargetCode(anyString(), anyInt())).thenReturn(Optional.of(saveWord));
 
         // when
-        saveWordService.deleteWord(saveWord);
+        saveWordService.deleteBookmarkWord(saveWord);
 
         // then
         verify(saveWordRepository, times(1)).findByTbUserIdAndTargetCode(anyString(), anyInt());
         verify(saveWordRepository, times(1)).delete(any(SaveWord.class));
     }
-
-    @Test
-    void getSaveWords() {
-        // given
-        SaveWord saveWord1 = new SaveWord(1, "test123",123,"배","");
-        SaveWord saveWord2 = new SaveWord(2, "test123",456,"사과","");
-        List<SaveWord> saveWords = new ArrayList<>();
-        saveWords.add(saveWord1);
-        saveWords.add(saveWord2);
-
-        when(saveWordRepository.findAllByTbUserId(anyString())).thenReturn(saveWords);
-
-        // when
-        List<SaveWord> result = saveWordService.getSavedWords("test123");
-
-        // then
-        assertEquals(2, result.size());
-        verify(saveWordRepository, times(1)).findAllByTbUserId(anyString());
-    }
+//
+//    @Test
+//    void getSaveWords() {
+//        // given
+//        SaveWord saveWord1 = new SaveWord(1, "test123",123,"배","");
+//        SaveWord saveWord2 = new SaveWord(2, "test123",456,"사과","");
+//        List<SaveWord> saveWords = new ArrayList<>();
+//        saveWords.add(saveWord1);
+//        saveWords.add(saveWord2);
+//
+//        when(saveWordRepository.findAllByTbUserId(anyString())).thenReturn(saveWords);
+//
+//        // when
+//        List<SaveWord> result = saveWordService.getSavedWords("test123");
+//
+//        // then
+//        assertEquals(2, result.size());
+//        verify(saveWordRepository, times(1)).findAllByTbUserId(anyString());
+//    }
 
     @Test
     void SaveWordList_test(){
         when(saveWordRepository.findAllByTbUserId(anyString()))
                 .thenReturn(List.of(SaveWord.builder().targetCode(123).build()));
 
-        List<SaveWord> result = saveWordService.SaveWordList("test123");
+        List<SaveWord> result = saveWordService.getBookmarkWords("test123");
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0).getTargetCode()).isEqualTo(123);
     }

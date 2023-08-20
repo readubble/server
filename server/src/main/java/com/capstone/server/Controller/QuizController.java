@@ -26,7 +26,7 @@ public class QuizController {
 
     @GetMapping("/quiz/{id}")
     public ListResultReponseDTO wordQuizzes(@PathVariable("id") String userId){
-        List<WordQuizResultDTO> messageBody = wordQuizService.wordQuizList(userId);
+        List<WordQuizResultDTO> messageBody = wordQuizService.getWordQuizzes(userId);
         return ListResultReponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -35,7 +35,7 @@ public class QuizController {
 
     @PostMapping("/quiz")
     public ResponseDTO wordQuizResolve(@RequestBody WordQuizRequestDTO wordQuizRequestDTO){
-        wordQuizAnswerService.wordQuizSave(wordQuizRequestDTO);
+        wordQuizAnswerService.saveWordQuiz(wordQuizRequestDTO);
         return ResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase()).build();

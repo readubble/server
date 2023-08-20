@@ -3,7 +3,6 @@ package com.capstone.server.Service;
 import com.capstone.server.DTO.ArticleDTO;
 import com.capstone.server.Domain.Article;
 import com.capstone.server.Domain.SaveArticle;
-import com.capstone.server.Domain.User;
 import com.capstone.server.Repository.ArticleRepository;
 import com.capstone.server.Repository.SaveArticleRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,9 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,7 +51,7 @@ class SaveArticleServiceTest {
         when(saveArticleRepository.existsByTbUserIdAndTbArticleId("test123", 1))
                 .thenReturn(true);
 
-        saveArticleService.ArticleBookMark("test123", 1);
+        saveArticleService.bookmarkArticle("test123", 1);
 
         verify(saveArticleRepository, times(1)).save(any(SaveArticle.class));
     }
@@ -66,7 +63,7 @@ class SaveArticleServiceTest {
                         .tbArticleId(1)
                         .tbUserId("test123")
                         .build()));
-        saveArticleService.deleteArticle("test123",1);
+        saveArticleService.deleteBookmarkArticle("test123",1);
         verify(saveArticleRepository, times(1)).delete(any(SaveArticle.class));
     }
 
@@ -78,7 +75,7 @@ class SaveArticleServiceTest {
                 .thenReturn(List.of(SaveArticle.builder()
                         .tbUserId("test123")
                         .tbArticleId(1).build()));
-        List<ArticleDTO> result = saveArticleService.saveArticleList("test123", 1);
+        List<ArticleDTO> result = saveArticleService.getBookmarkArticles("test123", 1);
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0).getId()).isEqualTo(1);
     }

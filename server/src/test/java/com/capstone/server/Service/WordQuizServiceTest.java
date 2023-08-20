@@ -80,7 +80,7 @@ class WordQuizServiceTest {
         when(wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizNo("test123", 2)).thenReturn(Optional.empty());
         when(wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizNo("test123",3)).thenReturn(Optional.of(wordQuizAnswer3));
 
-        List<WordQuizResultDTO> result = wordQuizService.wordQuizList("test123");
+        List<WordQuizResultDTO> result = wordQuizService.getWordQuizzes("test123");
 
         assertThat(result.size()).isEqualTo(3);
         assertThat(result.get(0).getSolved()).isEqualTo("Y");

@@ -23,12 +23,12 @@ public class WordQuizAnswerService {
         this.wordQuizRepository = wordQuizRepository;
     }
 
-    public void wordQuizSave(WordQuizRequestDTO wordQuizRequestDTO){
+    public void saveWordQuiz(WordQuizRequestDTO wordQuizRequestDTO){
         WordQuizAnswer wordQuizAnswer = new WordQuizAnswer(wordQuizRequestDTO.getUserId(), wordQuizRequestDTO.getQuizId(), wordQuizRequestDTO.getQuizChoice(), wordQuizRequestDTO.getQuizResult());
         wordQuizAnswerRepository.save(wordQuizAnswer);
     }
 
-    public String wordQuizInfo(String userId){
+    public String getWordQuiz(String userId){
         List<WordQuiz> quiz = wordQuizRepository.findTop3By();
         String result="";
         for(int i=0; i<3; i++){

@@ -1,7 +1,5 @@
 package com.capstone.server.Service;
 
-import com.capstone.server.DTO.ArticleDTO;
-import com.capstone.server.DTO.ResponseDTO.ProblemResponseDTO;
 import com.capstone.server.Domain.Article;
 import com.capstone.server.Interface.ArticleInterface;
 import com.capstone.server.Repository.ArticleRepository;
@@ -13,9 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,36 +24,40 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public List<ArticleInterface> articleList(String userId, int category, int page, int size){
+    public List<ArticleInterface> getArticles(String userId, int category, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         List<ArticleInterface> result = articleRepository.findByArticleLEFTJOINTbRead(userId, category, pageable).toList();
         return result;
     }
 
-    public JSONObject article(int id){
+    public JSONObject getArticle(int id){
         Article article = articleRepository.findById(id);
         //문장별로, 문단별로 끊어서
-        JSONObject jsonObject = new JSONObject();
+        JSONObject result = new JSONObject();
+        List<List> content = separateArticle(article);
+        result.put("title", article.getAtcTitle());
+        result.put("content", content);
+        result.put("level", article.getDifficulty());
+        result.put("author", article.getAtcWriter());
+        return result;
 
-        String[] articleArr = article.getAtcText().split("\n"); //문단별로 끊기
-        List<List> result = new ArrayList<List>();
-        for(int i=0; i<articleArr.length; i++){
+    }
+
+    private List<List> separateArticle(Article article){
+        String[] articleParagraphs = article.getAtcText().split("\n"); //문단별로 끊기
+        List<List> content = new ArrayList<List>();
+        for(int i=0; i<articleParagraphs.length; i++){
             //^“[가-힣\]*.”\s-\s[가-힣|\s]*|[\s]$
             //^[0-9가-힣\s.]*.$
             Pattern pattern = Pattern.compile("^“[가-힣]*.*”\\s-\\s[가-힣|\\s]*|“*[ㄱ-ㅎ가-힣a-zA-Z0-9\\s\\[\\]\\‘\\’\\\\'\\\",\\“\\”\\-\\\\(\\)\\『\\』\\~\\·\\*]*”*[?|!][\\s]|“*[ㄱ-ㅎ가-힣a-zA-Z0-9\\s\\[\\]\\‘\\’\\\\'\\\",\\“\\”\\-\\\\(\\)\\『\\』\\~\\·\\*\\?\\!]*”*[.]");
-            Matcher matcher = pattern.matcher(articleArr[i]);
-            List tmp_list = new ArrayList<>();
+            Matcher matcher = pattern.matcher(articleParagraphs[i]);
+            List sentences = new ArrayList<>();
             while(matcher.find()){
-                tmp_list.add(matcher.group());
+                sentences.add(matcher.group());
             }
-            result.add(tmp_list);
+            content.add(sentences);
         }
-        jsonObject.put("title", article.getAtcTitle());
-        jsonObject.put("content", result);
-        jsonObject.put("level", article.getDifficulty());
-        jsonObject.put("author", article.getAtcWriter());
-        return jsonObject;
-
+        return content;
     }
 
     public String getSummarization(int id){

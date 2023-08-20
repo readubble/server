@@ -37,7 +37,7 @@ public class ProblemController {
 
     @GetMapping("/problem/users/{id}")
     public ListResultReponseDTO unresolvedArticles(@PathVariable("id") String userId, @RequestParam(name="category", required=true) int category, @RequestParam(name="page", required = false, defaultValue = "0") int page, @RequestParam(name="size", required = false, defaultValue = "5") int size){
-        List<ArticleInterface> messageBody = articleService.articleList(userId, category, page, size);
+        List<ArticleInterface> messageBody = articleService.getArticles(userId, category, page, size);
         return ListResultReponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -46,8 +46,8 @@ public class ProblemController {
 
     @GetMapping("/problem/{id}")
     public ProblemResponseDTO articleWithExercises(@PathVariable("id")int id){
-        JSONObject article = articleService.article(id);
-        List<JSONObject> exercises = quizService.Quiz(id);
+        JSONObject article = articleService.getArticle(id);
+        List<JSONObject> exercises = quizService.getQuiz(id);
         return ProblemResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -58,7 +58,7 @@ public class ProblemController {
 
     @PostMapping("/problem/{id}")
     public ResultResponseDTO problemCheck(@PathVariable("id") int problemId, @RequestBody ProblemRequestDTO problemRequestDTO){
-        tbReadService.save(problemRequestDTO, problemId);
+        tbReadService.saveReadHistory(problemRequestDTO, problemId);
         String summarization = articleService.getSummarization(problemId);
         JSONObject messageBody = new JSONObject();
         messageBody.put("problem_id", problemId);
@@ -72,7 +72,7 @@ public class ProblemController {
 
     @GetMapping("/problem/{problem_id}/users/{user_id}")
     public ResultResponseDTO problemResult(@PathVariable("problem_id") int problemId, @PathVariable("user_id") String userId){
-        JSONObject messageBody = tbReadService.getResult(problemId, userId);
+        JSONObject messageBody = tbReadService.getReadResult(problemId, userId);
         return ResultResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -91,7 +91,7 @@ public class ProblemController {
         // save_fl 값을 'Y'로 변경해줍니다. 이를 위해 tbReadService의 updateSaveFl 메서드를 호출합니다.
         tbReadService.updateSaveFl(userId, problemId);
         //     4. saveArticle에  글 저장하기
-        saveArticleService.ArticleBookMark(userId, problemId);
+        saveArticleService.bookmarkArticle(userId, problemId);
 
         return ResponseDTO.builder()
                 .code(HttpStatus.OK.value())
@@ -100,7 +100,7 @@ public class ProblemController {
 
     @GetMapping("/problem/bookmark/users/{user-id}")
     public ListResultReponseDTO problemBookmarks(@PathVariable("user-id") String userId, @RequestParam("category") int cgId){
-        List<ArticleDTO> messageBody = saveArticleService.saveArticleList(userId, cgId);
+        List<ArticleDTO> messageBody = saveArticleService.getBookmarkArticles(userId, cgId);
         return ListResultReponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

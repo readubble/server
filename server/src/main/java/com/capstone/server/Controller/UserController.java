@@ -59,7 +59,7 @@ public class UserController {
                 .userId(userId)
                 .token(response.getHeader(JwtProperties.REFRESH_HEADER_STRING))
                 .status(true).build();
-        tokenService.TokenSave(tokenDTO);
+        tokenService.saveToken(tokenDTO);
 
         JSONObject messageBody = new JSONObject();
         messageBody.put("access_token", response.getHeader(JwtProperties.ACCESS_HEADER_STRING));
@@ -81,7 +81,7 @@ public class UserController {
     @GetMapping("/users/authorize/auto")
     public ResultResponseDTO autoLogin(@RequestHeader("Authorization") String Authorization){
         String userId = tokenService.getUsername(Authorization.replace(JwtProperties.TOKEN_PREFIX, ""));
-        userService.AutoLogin(userId);
+        userService.autoLogin(userId);
         JSONObject messageBody = new JSONObject();
         messageBody.put("user_id", userId);
         return ResultResponseDTO.builder()
@@ -94,7 +94,7 @@ public class UserController {
     public ResultResponseDTO tokenRenew(@RequestHeader("Authorization") String Authorization, @RequestBody JSONObject requestMessageBody, HttpServletResponse response, HttpServletRequest request){
         String userId = tokenService.getUsername(Authorization.replaceFirst("Bearer ",""));
         String RefreshToken = requestMessageBody.get("refresh_token").toString();
-        String accessToken = tokenService.TokenRenew(RefreshToken, userId);
+        String accessToken = tokenService.renewToken(RefreshToken, userId);
         JSONObject messageBody = new JSONObject();
         messageBody.put("access_token", accessToken);
         return ResultResponseDTO.builder()
@@ -106,7 +106,7 @@ public class UserController {
     @PostMapping("/users/logout")
     public ResponseDTO logout(@RequestHeader("Authorization") String Authorization, @RequestBody JSONObject requestMessageBody){
         String userId = requestMessageBody.get("user_id").toString();
-        tokenService.TokenUpdate(userId, Authorization);
+        tokenService.updateTokenStatus(userId, Authorization);
         return ResponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase()).build();
@@ -137,7 +137,7 @@ public class UserController {
 
         for(int i=0; i<3; i++) {
             JSONObject messageBody = new JSONObject();
-            num_result = tbReadService.ReadArticleInfo(userId, articleDifficulty[i]);
+            num_result = tbReadService.countReadArticles(userId, articleDifficulty[i]);
             messageBody.put("level", articleDifficulty[i]);
             messageBody.put("num", num_result);
             messageBodies.add(messageBody);
@@ -151,7 +151,7 @@ public class UserController {
 
     @GetMapping("/users/{id}/problem")
     public ListResultReponseDTO userResolvedProblemInfo(@PathVariable("id") String userId, @RequestParam(name="level", required=true) String difficulty, @RequestParam(name="page", required = false, defaultValue = "0") int page, @RequestParam(name="size", required = false, defaultValue = "5") int size){
-        List<TbReadInterface> messageBody = tbReadService.getUserReadInfo(userId, difficulty, page, size);
+        List<TbReadInterface> messageBody = tbReadService.getUserReadHistory(userId, difficulty, page, size);
         return ListResultReponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -160,7 +160,7 @@ public class UserController {
 
     @GetMapping("/users/{id}/quiz")
     public ResultResponseDTO userWordQuizResult(@PathVariable("id") String userId){
-        String result = wordQuizAnswerService.wordQuizInfo(userId);
+        String result = wordQuizAnswerService.getWordQuiz(userId);
         JSONObject messageBody = new JSONObject();
         messageBody.put("result", result);
         return ResultResponseDTO.builder()

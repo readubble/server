@@ -38,7 +38,7 @@ public class WordController {
         String userId = requestBody.get("id").toString();
         String keyword = requestBody.get("keyword").toString();
         try {
-            List<DictResponseDTO> messageBody = dictService.getDictInfo(keyword, userId);
+            List<DictResponseDTO> messageBody = dictService.getDictionary(keyword, userId);
             return ListResultReponseDTO.builder()
                     .code(HttpStatus.OK.value())
                     .message(HttpStatus.OK.getReasonPhrase())
@@ -57,7 +57,7 @@ public class WordController {
         String wordMean = requestBody.get("word_mean").toString();
         //searchService.updateSaveFl(userId, wordId, wordNm, wordMean);
 //     2. jsonObject(BodyParameter)의 user_id 객체를 String으로 변환하여 userId에 저장
-        saveWordService.saveWord(userId, wordId, wordNm, wordMean);
+        saveWordService.bookmarkWord(userId, wordId, wordNm, wordMean);
 //     3. SaveWordService에 있는 saveWordBookMark 함수를 통해 SaveWord 테이블에 저장한다.
 //        (userId와 wordId를 통해서 저장)
 
@@ -68,7 +68,7 @@ public class WordController {
 
     @GetMapping("/word/bookmark/users/{user-id}")
     public ListResultReponseDTO wordBookmarks(@PathVariable("user-id") String userId){
-        List<SaveWord> messageBody = saveWordService.SaveWordList(userId);
+        List<SaveWord> messageBody = saveWordService.getBookmarkWords(userId);
         return ListResultReponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())

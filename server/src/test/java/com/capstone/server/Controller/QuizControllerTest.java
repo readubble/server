@@ -20,7 +20,6 @@ import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -59,7 +58,7 @@ class QuizControllerTest {
         WordQuizResultDTO wordQuizResultDTO1 = new WordQuizResultDTO(1, "사흘의 뜻을 고르세요", List.of("3일", "4일"), 1, "Y", 1);
         WordQuizResultDTO wordQuizResultDTO2 = new WordQuizResultDTO(2, "일석이조의 뜻을 고르세요", List.of("하나를 얻고 하나를 잃는다", "하나를 얻고 또 하나를 얻는다"), 2, "N", -1);
         WordQuizResultDTO wordQuizResultDTO3 = new WordQuizResultDTO(3, "금일의 뜻을 고르세요", List.of("오늘","금요일"), 1, "Y", 2);
-        when(wordQuizService.wordQuizList("test123"))
+        when(wordQuizService.getWordQuizzes("test123"))
                 .thenReturn(List.of(wordQuizResultDTO1, wordQuizResultDTO2, wordQuizResultDTO3));
         mvc.perform(get("/quiz/test123")
                         .header("Authorization", "token"))

@@ -7,11 +7,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -32,8 +30,8 @@ class QuizAnswerServiceTest {
 
         when(quizAnswerRepository.countAllByCorrectFlIsAndTbUserIdJoinArticle(anyString(), anyString(), eq("D2")))
                 .thenReturn(2);
-        int D1_result = quizAnswerService.getUserQuizInfo("test1234", "D1");
-        int D2_result = quizAnswerService.getUserQuizInfo("test1234", "D2");
+        int D1_result = quizAnswerService.getUserQuizAnswer("test1234", "D1");
+        int D2_result = quizAnswerService.getUserQuizAnswer("test1234", "D2");
         assertThat(D1_result).isEqualTo(3);
         assertThat(D2_result).isEqualTo(2);
     }

@@ -21,16 +21,4 @@ public class SearchService {
     public void save(SearchDTO searchDTO){
         searchRepository.save(searchDTO.toEntity());
     }
-
-    public void updateSaveFl(String userId, int wordNo){
-        Optional<Search> searchData = searchRepository.findByTbUserIdAndTbDictWordNo(userId, wordNo);
-        if(searchData.isPresent()) {
-            if (searchData.get().getSaveFl() == "Y") { // 데이터가 존재하는 경우,
-                searchData.get().setSaveFl("N"); // setSaveFl() 메소드를 이용해 save_fl 값을 "Y"로 업데이트한 뒤,
-            } else {
-                searchData.get().setSaveFl("Y");
-            }
-            searchRepository.save(searchData.get());
-        }
-    }
 }
