@@ -61,7 +61,7 @@ public class TokenService {
             }else{
                 return false;
             }
-        } catch (Exception e){ //토큰 자체가 잘못된 경우
+        } catch (Exception e){
             throw new ApiException(ExceptionEnum.TOKEN_ERROR);
         }
     }
@@ -75,13 +75,13 @@ public class TokenService {
     }
     public String renewToken(String refreshToken, String userId) throws ApiException {
         if(getUsername(refreshToken).equals(userId) && tokenRepository.existsByToken(refreshToken)){
-            if (!isTokenAvailable(refreshToken)) { //refresh token이 만료 -> 재로그인 필요
+            if (!isTokenAvailable(refreshToken)) {
                 throw new ApiException(ExceptionEnum.EXPIRED_TOKEN);
             } else{
                 String accessToken = createAccessToken(userId);
                 return accessToken;
             }
-        } else{ //유효하지 않은 토큰
+        } else{
             throw new ApiException(ExceptionEnum.TOKEN_ERROR);
         }
     }

@@ -26,27 +26,12 @@ public class SaveArticleService {
         this.saveArticleRepository = saveArticleRepository;
         this.articleRepository = articleRepository;
     }
-//    SaveArticle
-//    @Id
-//    private int saveNo;
-//    private int cgNo;
-//    private int tbArticleId;
-//    private String tbUserId;
-//    private String genre;
-//    private String atcTitle;
-//    @Column(columnDefinition = "char")
-//    private String difficulty;
-//    private String atcPhotoTn;
-    // 저장
+
     public void bookmarkArticle(String userId, int articleId) {
-        // 1. 먼저, articleId를 이용하여 Article 테이블에서 해당 문제의 정보를 가져옵니다.
         Article article = articleRepository.findById(articleId);
         Boolean saveArticleCheck = saveArticleRepository.existsByTbUserIdAndTbArticleId(userId, articleId);
-        // 이후, SaveArticle 테이블에서 현재 사용자가 해당 문제를 이미 북마크한 적이 있는지 확인합니다.
-        // findByTbUserIdAndAndTbArticleId 메소드를 이용하여 tbUserId와 tbArticleId가 모두 일치하는 데이터를 검색하고
-        // 결과를 saveArticleCheck 변수에 저장합니다.
+
         if (!saveArticleCheck) {
-            // 만약 saveArticleCheck가 null인 경우, 즉 이전에 북마크한 적이 없는 경우 SaveArticle 객체를 생성하여 해당 정보를 저장
             SaveArticle saveArticle = SaveArticle.builder()
                     .tbUserId(userId)
                     .tbArticleId(article.getId())
@@ -62,7 +47,6 @@ public class SaveArticleService {
         }
     }
 
-    // 삭제
     public void deleteBookmarkArticle(String userId, int articleId) {
         Optional<SaveArticle> saveArticles = saveArticleRepository.findByTbUserIdAndAndTbArticleId(userId, articleId);
         if(saveArticles.isPresent()) {

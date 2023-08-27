@@ -60,19 +60,15 @@ public class DictService {
             JsonNode jsonNode = objectMapper.readTree(responseBody);
 
             if(jsonNode.get("channel").get("total").asInt()>jsonNode.get("channel").get("total").asInt()){
-                //total이 큰 경우 -> 목록 다시 받아오기
                 response = getDictionaryApi(keyword, 1, jsonNode.get("channel").get("total").asInt());
                 if(!isResponseAvailable(response)){
-                    //DB에서 받아오기
                     return getDictionaryDB(keyword, userId);
                 }
             }
-            //total이 커서 재시도 후 정상적으로 값을 받아왔거나, total이 num보다 적은 경우
-            //API의 결과값을 그대로 반환해주면 된다.
             saveSearchHistory(userId, result, jsonNode);
             return result;
 
-        }else{ //서버 통신 오류 -> DB에서 받아오기
+        }else{
             return getDictionaryDB(keyword, userId);
 
         }
@@ -102,7 +98,6 @@ public class DictService {
             return new Response(true, response);
         }catch (Exception e){
             return new Response(false);
-            //db에서 받아오기
         }
     }
 

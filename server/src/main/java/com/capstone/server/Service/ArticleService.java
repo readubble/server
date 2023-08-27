@@ -32,7 +32,6 @@ public class ArticleService {
 
     public JSONObject getArticle(int id){
         Article article = articleRepository.findById(id);
-        //문장별로, 문단별로 끊어서
         JSONObject result = new JSONObject();
         List<List> content = separateArticle(article);
         result.put("title", article.getAtcTitle());
@@ -47,8 +46,6 @@ public class ArticleService {
         String[] articleParagraphs = article.getAtcText().split("\n"); //문단별로 끊기
         List<List> content = new ArrayList<List>();
         for(int i=0; i<articleParagraphs.length; i++){
-            //^“[가-힣\]*.”\s-\s[가-힣|\s]*|[\s]$
-            //^[0-9가-힣\s.]*.$
             Pattern pattern = Pattern.compile("^“[가-힣]*.*”\\s-\\s[가-힣|\\s]*|“*[ㄱ-ㅎ가-힣a-zA-Z0-9\\s\\[\\]\\‘\\’\\\\'\\\",\\“\\”\\-\\\\(\\)\\『\\』\\~\\·\\*]*”*[?|!][\\s]|“*[ㄱ-ㅎ가-힣a-zA-Z0-9\\s\\[\\]\\‘\\’\\\\'\\\",\\“\\”\\-\\\\(\\)\\『\\』\\~\\·\\*\\?\\!]*”*[.]");
             Matcher matcher = pattern.matcher(articleParagraphs[i]);
             List sentences = new ArrayList<>();

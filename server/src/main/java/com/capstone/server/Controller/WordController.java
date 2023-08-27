@@ -29,7 +29,7 @@ public class WordController {
     @Autowired
     public WordController(DictService dictService, SaveWordService saveWordService, SearchService searchService) {
         this.dictService = dictService;
-        this.saveWordService = saveWordService; // 진성
+        this.saveWordService = saveWordService;
         this.searchService = searchService;
     }
 
@@ -48,18 +48,12 @@ public class WordController {
         }
     }
 
-    // 단어 북마크
     @PostMapping ("/word/{word-id}/bookmark")
     public ResponseDTO updateWordBookmark(@PathVariable("word-id") int wordId, @RequestBody JSONObject requestBody){
-//     1. Authorization에 토큰 저장 / wordId에 word_id 저장 / BodyParameter는 JSONObject로 받아옴
         String userId = requestBody.get("user_id").toString();
         String wordNm = requestBody.get("word_nm").toString();
         String wordMean = requestBody.get("word_mean").toString();
-        //searchService.updateSaveFl(userId, wordId, wordNm, wordMean);
-//     2. jsonObject(BodyParameter)의 user_id 객체를 String으로 변환하여 userId에 저장
         saveWordService.bookmarkWord(userId, wordId, wordNm, wordMean);
-//     3. SaveWordService에 있는 saveWordBookMark 함수를 통해 SaveWord 테이블에 저장한다.
-//        (userId와 wordId를 통해서 저장)
 
         return ResponseDTO.builder()
                 .code(HttpStatus.OK.value())
