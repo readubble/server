@@ -1,15 +1,12 @@
 package com.capstone.server.Controller;
 
-import com.capstone.server.DTO.DictDTO;
 import com.capstone.server.DTO.ResponseDTO.DictResponseDTO;
 import com.capstone.server.Domain.SaveWord;
 import com.capstone.server.Domain.User;
 import com.capstone.server.Repository.UserRepository;
-import com.capstone.server.Service.ArticleService;
 import com.capstone.server.Service.DictService;
 import com.capstone.server.Service.SaveWordService;
 import com.capstone.server.Service.SearchService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -26,7 +23,6 @@ import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -74,7 +70,7 @@ class WordControllerTest {
     @Test
     @WithUserDetails("test123")
     void wordSearchTest() throws Exception {
-        when(dictService.getDictInfoDB("사과", "test123")).thenReturn(List.of(dict1, dict2));
+        when(dictService.getDictionaryDB("사과", "test123")).thenReturn(List.of(dict1, dict2));
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", "test123");
         jsonObject.put("keyword", "사과");
@@ -106,7 +102,7 @@ class WordControllerTest {
     @WithUserDetails("test123")
     public void wordBookmarkListTest() throws Exception{
         SaveWord saveWord = new SaveWord(1,"test123",123,"","");
-        when(saveWordService.SaveWordList("test123"))
+        when(saveWordService.getBookmarkWords("test123"))
                 .thenReturn(List.of(saveWord));
         mvc.perform(get("/word/bookmark/users/test123")
                         .header("Authorization",""))

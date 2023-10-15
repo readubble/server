@@ -95,7 +95,7 @@ class QuizServiceTest {
                                         .itemNo(3)
                                         .tbArticleId(1).build()));
 
-        List<JSONObject> result = quizService.Quiz(1);
+        List<JSONObject> result = quizService.getQuiz(1);
         assertThat(result.get(0).get("choices")).isEqualTo(
                 List.of("1-항목1", "1-항목2", "1-항목3")
         );

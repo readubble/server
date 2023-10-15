@@ -3,7 +3,6 @@ package com.capstone.server.Service;
 import com.capstone.server.Domain.Article;
 import com.capstone.server.Interface.ArticleInterface;
 import com.capstone.server.Repository.ArticleRepository;
-import com.google.type.DateTime;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
@@ -71,7 +69,7 @@ class ArticleServiceTest {
         Page<ArticleInterface> page = new PageImpl<>(result);
         when(articleRepository.findByArticleLEFTJOINTbRead(anyString(), anyInt(), any()))
                 .thenReturn(page);
-        List<ArticleInterface> result_list = articleService.articleList("test123", 1, 0, 1);
+        List<ArticleInterface> result_list = articleService.getArticles("test123", 1, 0, 1);
         assertThat(result_list.get(0).getAtcTitle()).isEqualTo("title1");
     }
 
@@ -93,7 +91,7 @@ class ArticleServiceTest {
                         .atcTitle("브람스 교향곡 4번")
                         .regDt(new Date())
                         .cgId(1).build());
-        JSONObject result = articleService.article(1);
+        JSONObject result = articleService.getArticle(1);
         assertThat(result.get("content")).isEqualTo(List.of(
                 List.of("“거인이 내 뒤로 뚜벅뚜벅 쫓아오는 소리를 항상 들어야 한다고 생각해보게. 그때 그 기분을 자네는 전혀 상상할 수 없을 걸세.” - 요하네스 브람스"),
                 List.of("19세기의 다른 교향곡 작곡가들과 마찬가지로 브람스 역시 베토벤이라는 거인을 피해갈 수 없었다.", " 광대한 우주의 소리를 담아낸 베토벤의 교향곡이야말로 독일 교향곡의 모범답안으로 여겨지던 당대의 분위기에선 신작 교향곡이 나오면 곧바로 베토벤과 비교될 수밖에 없었다.", " 그러니 브람스가 그의 첫 번째 교향곡을 완성하기까지 무려 20여 년의 세월을 투자했던 것도 무리가 아니다."),

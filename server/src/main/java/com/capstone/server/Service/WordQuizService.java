@@ -28,29 +28,34 @@ public class WordQuizService {
         this.wordQuizAnswerRepository = wordQuizAnswerRepository;
     }
 
-    public List<WordQuizResultDTO> wordQuizList(String userId){
+    public List<WordQuizResultDTO> getWordQuizzes(String userId){
         List<WordQuizResultDTO> result = new ArrayList<>();
-        List<WordQuiz> quiz_items = wordQuizRepository.findTop3By();
+        List<WordQuiz> quizzes = wordQuizRepository.findTop3By();
         for(int i=0; i<3; i++){
-            WordQuiz wordQuiz = quiz_items.get(i);
-            List<WordQuizItem> quiz_item_items_data = wordQuizItemRepository.findAllByWordQuizNo(wordQuiz.getQuizNo());
-            List<String> quiz_item_items = new ArrayList<>();
-            for(int j=0; j<quiz_item_items_data.size(); j++) {
-                quiz_item_items.add(quiz_item_items_data.get(j).getItemValue());
-            }
-            Optional<WordQuizAnswer> quiz_solved = wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizNo(userId, wordQuiz.getQuizNo());
-            if(quiz_solved.isPresent()) {
-                WordQuizResultDTO wordQuizResultDTO = new WordQuizResultDTO(wordQuiz.getQuizNo(),
-                        wordQuiz.getQuizQuestion(), quiz_item_items, wordQuiz.getQuizAns(), "Y", quiz_solved.get().getQuizInp());
-                result.add(wordQuizResultDTO);
-            }else{
-                WordQuizResultDTO wordQuizResultDTO = new WordQuizResultDTO(wordQuiz.getQuizNo(),
-                        wordQuiz.getQuizQuestion(), quiz_item_items, wordQuiz.getQuizAns(), "N", -1);
-                result.add(wordQuizResultDTO);
-            }
+            WordQuiz wordQuiz = quizzes.get(i);
+            List<String> quizItems = getQuizItems(wordQuiz);
+            Optional<WordQuizAnswer> quizSolved = wordQuizAnswerRepository.findByTbUserIdAndTbWordQuizNo(userId, wordQuiz.getQuizNo());
+            WordQuizResultDTO wordQuizResultDTO = getWordQuizResult(quizSolved, wordQuiz, quizItems);
+            result.add(wordQuizResultDTO);
         }
-
         return result;
+    }
 
+    public List<String> getQuizItems(WordQuiz wordQuiz){
+        List<WordQuizItem> quizChoices = wordQuizItemRepository.findAllByWordQuizNo(wordQuiz.getQuizNo());
+        List<String> quizItems = new ArrayList<>();
+        for(int j=0; j<quizChoices.size(); j++) {
+            quizItems.add(quizChoices.get(j).getItemValue());
+        }
+        return quizItems;
+    }
+    public WordQuizResultDTO getWordQuizResult(Optional<WordQuizAnswer> quizSolved, WordQuiz wordQuiz, List<String> quizItems){
+        if(quizSolved.isPresent()) {
+            return new WordQuizResultDTO(wordQuiz.getQuizNo(),
+                    wordQuiz.getQuizQuestion(), quizItems, wordQuiz.getQuizAns(), "Y", quizSolved.get().getQuizInp());
+        }else{
+            return new WordQuizResultDTO(wordQuiz.getQuizNo(),
+                    wordQuiz.getQuizQuestion(), quizItems, wordQuiz.getQuizAns(), "N", -1);
+        }
     }
 }

@@ -1,14 +1,11 @@
 package com.capstone.server.Controller;
 
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.capstone.server.DTO.RequestDTO.JoinRequestDTO;
 import com.capstone.server.DTO.UserDTO;
-import com.capstone.server.Domain.TbRead;
 import com.capstone.server.Domain.User;
 import com.capstone.server.Interface.TbReadInterface;
 import com.capstone.server.Repository.UserRepository;
 import com.capstone.server.Service.*;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -21,13 +18,10 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 
 import java.io.FileInputStream;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -95,15 +89,15 @@ class UserControllerTest {
         mvc.perform(get("/users/authorize/auto")
                         .header("Authorization", "token"))
                 .andExpect(status().isOk());
-        verify(userService, times(1)).AutoLogin(argThat(String->String.equals("test123")));
+        verify(userService, times(1)).autoLogin(argThat(String->String.equals("test123")));
     }
 
     @Test
     @WithUserDetails("test123")
     void token_renew_test() throws Exception{
         when(tokenService.getUsername(anyString())).thenReturn("test123");
-        when(tokenService.TokenAvailableCheck(anyString())).thenReturn(true);
-        when(tokenService.TokenRenew(anyString(), anyString())).thenReturn("");
+        when(tokenService.isTokenAvailable(anyString())).thenReturn(true);
+        when(tokenService.renewToken(anyString(), anyString())).thenReturn("");
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("refresh_token", "");
@@ -153,11 +147,11 @@ class UserControllerTest {
     @Test
     @WithUserDetails("test123")
     void userStatisticsInfo_test() throws Exception{
-        when(quizAnswerService.getUserQuizInfo(anyString(), eq("D1")))
+        when(quizAnswerService.getUserQuizAnswer(anyString(), eq("D1")))
                 .thenReturn(3);
-        when(quizAnswerService.getUserQuizInfo(anyString(), eq("D2")))
+        when(quizAnswerService.getUserQuizAnswer(anyString(), eq("D2")))
                 .thenReturn(1);
-        when(quizAnswerService.getUserQuizInfo(anyString(), eq("D3")))
+        when(quizAnswerService.getUserQuizAnswer(anyString(), eq("D3")))
                 .thenReturn(0);
         mvc.perform(get("/users/test123/statistics")
                 .header("Authorization", "token"))
@@ -189,7 +183,7 @@ class UserControllerTest {
         };
         list.add(tbReadInterface);
 
-        when(tbReadService.getUserReadInfo(anyString(), anyString(), anyInt(), anyInt()))
+        when(tbReadService.getUserReadHistory(anyString(), anyString(), anyInt(), anyInt()))
                 .thenReturn(list);
 
         mvc.perform(get("/users/test123/problem?level=D1")
@@ -203,7 +197,7 @@ class UserControllerTest {
     @Test
     @WithUserDetails("test123")
     void userQuizInformation_test() throws Exception {
-        when(wordQuizAnswerService.wordQuizInfo("test123")).thenReturn("TNF");
+        when(wordQuizAnswerService.getWordQuiz("test123")).thenReturn("TNF");
         mvc.perform(get("/users/test123/quiz")
                         .header("Authorization", "token"))
                 .andExpect(status().isOk())

@@ -25,7 +25,7 @@ public class TokenService {
         this.tokenRepository = tokenRepository;
     }
 
-    public void TokenSave(TokenDTO tokenDTO){
+    public void saveToken(TokenDTO tokenDTO){
         tokenRepository.save(tokenDTO.toEntity());
     }
 
@@ -34,7 +34,6 @@ public class TokenService {
             String username = JWT.decode(token)
                     .getClaim("id")
                     .asString();
-            System.out.println(username);
             return username;
         } catch (Exception e){
             throw new ApiException(ExceptionEnum.TOKEN_ERROR);
@@ -52,7 +51,7 @@ public class TokenService {
         }
     }
 
-    public boolean TokenAvailableCheck(String token){
+    public boolean isTokenAvailable(String token){
         try{
             int expires = JWT.decode(token)
                     .getExpiresAt()
@@ -62,11 +61,11 @@ public class TokenService {
             }else{
                 return false;
             }
-        } catch (Exception e){ //토큰 자체가 잘못된 경우
+        } catch (Exception e){
             throw new ApiException(ExceptionEnum.TOKEN_ERROR);
         }
     }
-    private String AccessTokenCreate(String userId){
+    private String createAccessToken(String userId){
         String jwtAccessToken = JWT.create()
                 .withSubject(userId)
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME))
@@ -74,20 +73,20 @@ public class TokenService {
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
         return jwtAccessToken;
     }
-    public String TokenRenew(String refreshToken, String userId) throws ApiException {
+    public String renewToken(String refreshToken, String userId) throws ApiException {
         if(getUsername(refreshToken).equals(userId) && tokenRepository.existsByToken(refreshToken)){
-            if (!TokenAvailableCheck(refreshToken)) { //refresh token이 만료 -> 재로그인 필요
+            if (!isTokenAvailable(refreshToken)) {
                 throw new ApiException(ExceptionEnum.EXPIRED_TOKEN);
             } else{
-                String accessToken = AccessTokenCreate(userId);
+                String accessToken = createAccessToken(userId);
                 return accessToken;
             }
-        } else{ //유효하지 않은 토큰
+        } else{
             throw new ApiException(ExceptionEnum.TOKEN_ERROR);
         }
     }
 
-    public void TokenUpdate(String userId, String accessToken){
+    public void updateTokenStatus(String userId, String accessToken){
         Optional<Token> token = tokenRepository.findById(userId);
         Token newToken = Token.builder()
                 .userId(token.get().getUserId())

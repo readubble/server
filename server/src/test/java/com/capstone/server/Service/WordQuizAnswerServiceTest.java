@@ -46,7 +46,7 @@ class WordQuizAnswerServiceTest {
     }
     @Test
     void wordQuizAnswer_test(){
-        wordQuizAnswerService.wordQuizSave(WordQuizRequestDTO.builder()
+        wordQuizAnswerService.saveWordQuiz(WordQuizRequestDTO.builder()
                 .quizId(1)
                 .userId("test123")
                 .quizChoice(1)
@@ -64,7 +64,7 @@ class WordQuizAnswerServiceTest {
                 .thenReturn(Optional.of(wordQuizAnswer3));
         when(wordQuizRepository.findTop3By())
                 .thenReturn(List.of(wordQuiz1, wordQuiz2, wordQuiz3));
-        String result = wordQuizAnswerService.wordQuizInfo("test1234");
+        String result = wordQuizAnswerService.getWordQuiz("test1234");
         assertThat(result).isEqualTo("TNF");
     }
 

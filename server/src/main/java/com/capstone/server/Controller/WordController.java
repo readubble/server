@@ -1,10 +1,8 @@
 package com.capstone.server.Controller;
 
-import com.capstone.server.DTO.DictDTO;
 import com.capstone.server.DTO.ResponseDTO.DictResponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ListResultReponseDTO;
 import com.capstone.server.DTO.ResponseDTO.ResponseDTO;
-import com.capstone.server.DTO.ResponseDTO.ResultResponseDTO;
 import com.capstone.server.Domain.SaveWord;
 import com.capstone.server.Exception.ApiException;
 import com.capstone.server.Exception.ExceptionEnum;
@@ -31,37 +29,31 @@ public class WordController {
     @Autowired
     public WordController(DictService dictService, SaveWordService saveWordService, SearchService searchService) {
         this.dictService = dictService;
-        this.saveWordService = saveWordService; // 진성
+        this.saveWordService = saveWordService;
         this.searchService = searchService;
     }
 
     @PostMapping ("/word")
-    public ListResultReponseDTO wordSearch(@RequestHeader("Authorization") String Authorization, @RequestBody JSONObject jsonObject){
-        String userId = jsonObject.get("id").toString();
-        String keyword = jsonObject.get("keyword").toString();
+    public ListResultReponseDTO wordSearch(@RequestHeader("Authorization") String Authorization, @RequestBody JSONObject requestBody){
+        String userId = requestBody.get("id").toString();
+        String keyword = requestBody.get("keyword").toString();
         try {
-            List<DictResponseDTO> result = dictService.getDictInfo(keyword, userId);
+            List<DictResponseDTO> messageBody = dictService.getDictionary(keyword, userId);
             return ListResultReponseDTO.builder()
                     .code(HttpStatus.OK.value())
                     .message(HttpStatus.OK.getReasonPhrase())
-                    .data(result).build();
+                    .data(messageBody).build();
         } catch(Exception e){
             throw new ApiException(ExceptionEnum.RUNTIME_EXCEPTION);
         }
     }
 
-    // 단어 북마크
     @PostMapping ("/word/{word-id}/bookmark")
-    public ResponseDTO wordBookmark(@PathVariable("word-id") int wordId, @RequestBody JSONObject jsonObject){
-//     1. Authorization에 토큰 저장 / wordId에 word_id 저장 / BodyParameter는 JSONObject로 받아옴
-        String userId = jsonObject.get("user_id").toString();
-        String wordNm = jsonObject.get("word_nm").toString();
-        String wordMean = jsonObject.get("word_mean").toString();
-        //searchService.updateSaveFl(userId, wordId, wordNm, wordMean);
-//     2. jsonObject(BodyParameter)의 user_id 객체를 String으로 변환하여 userId에 저장
-        saveWordService.saveWord(userId, wordId, wordNm, wordMean);
-//     3. SaveWordService에 있는 saveWordBookMark 함수를 통해 SaveWord 테이블에 저장한다.
-//        (userId와 wordId를 통해서 저장)
+    public ResponseDTO updateWordBookmark(@PathVariable("word-id") int wordId, @RequestBody JSONObject requestBody){
+        String userId = requestBody.get("user_id").toString();
+        String wordNm = requestBody.get("word_nm").toString();
+        String wordMean = requestBody.get("word_mean").toString();
+        saveWordService.bookmarkWord(userId, wordId, wordNm, wordMean);
 
         return ResponseDTO.builder()
                 .code(HttpStatus.OK.value())
@@ -69,12 +61,12 @@ public class WordController {
     }
 
     @GetMapping("/word/bookmark/users/{user-id}")
-    public ListResultReponseDTO wordBookmarkList(@PathVariable("user-id") String id){
-        List<SaveWord> result = saveWordService.SaveWordList(id);
+    public ListResultReponseDTO wordBookmarks(@PathVariable("user-id") String userId){
+        List<SaveWord> messageBody = saveWordService.getBookmarkWords(userId);
         return ListResultReponseDTO.builder()
                 .code(HttpStatus.OK.value())
                 .message(HttpStatus.OK.getReasonPhrase())
-                .data(result).build();
+                .data(messageBody).build();
 
     }
 }

@@ -13,11 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.sql.Time;
@@ -25,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -67,7 +63,7 @@ class TbReadServiceTest {
         when(tbReadRepository.findAllByTbUserIdLEFTJOINArticle(anyString(), anyString(), any()))
                 .thenReturn(page);
 
-        List<TbReadInterface> result = tbReadService.getUserReadInfo("test1234", "D1", 0, 1);
+        List<TbReadInterface> result = tbReadService.getUserReadHistory("test1234", "D1", 0, 1);
 
         assertThat(result.get(0).getTbArticleId()).isEqualTo(1);
 
@@ -75,7 +71,7 @@ class TbReadServiceTest {
 
     @Test
     void save_test(){
-        tbReadService.save(ProblemRequestDTO
+        tbReadService.saveReadHistory(ProblemRequestDTO
                 .builder()
                 .userId("test123")
                 .keyword(List.of("1","2","3"))
@@ -109,7 +105,7 @@ class TbReadServiceTest {
                         .build());
         when(articleService.getSummarization(1))
                 .thenReturn("ai요약결과");
-        JSONObject jsonObject = tbReadService.getResult(1, "test123");
+        JSONObject jsonObject = tbReadService.getReadResult(1, "test123");
         assertThat(jsonObject.get("sentence")).isEqualTo(List.of("문항1", "문항2", "문항3"));
         assertThat(jsonObject.get("ai-summarization")).isEqualTo("ai요약결과");
 

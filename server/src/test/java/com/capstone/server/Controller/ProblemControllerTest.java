@@ -9,9 +9,7 @@ import com.capstone.server.Service.ArticleService;
 import com.capstone.server.Service.QuizService;
 import com.capstone.server.Service.SaveArticleService;
 import com.capstone.server.Service.TbReadService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -106,7 +103,7 @@ class ProblemControllerTest {
         };
         result.add(article);
 
-        when(articleService.articleList(anyString(), anyInt(), anyInt(), anyInt()))
+        when(articleService.getArticles(anyString(), anyInt(), anyInt(), anyInt()))
                 .thenReturn(result);
 
         mvc.perform(get("/problem/users/test123?category=art")
@@ -129,13 +126,13 @@ class ProblemControllerTest {
         ));
         problem.put("level", "하");
         problem.put("author", "클래식 명곡 명연주, 최은규");
-        when(articleService.article(1))
+        when(articleService.getArticle(1))
                 .thenReturn(problem);
         JSONObject quiz = new JSONObject();
         quiz.put("problem", "문제");
         quiz.put("choices", List.of("문항1", "문항2", "문항3"));
         quiz.put("answer", 1);
-        when(quizService.Quiz(1))
+        when(quizService.getQuiz(1))
                 .thenReturn(List.of(quiz, quiz, quiz));
         mvc.perform(get("/problem/1")
                         .header("Authorization", "token"))
@@ -178,7 +175,7 @@ class ProblemControllerTest {
         jsonObject.put("sentence", List.of("주제문", "주제문", "주제문"));
         jsonObject.put("summarization", "요약");
         jsonObject.put("ai-summarization", "ai요약");
-        when(tbReadService.getResult(1, "test123"))
+        when(tbReadService.getReadResult(1, "test123"))
                 .thenReturn(jsonObject);
 
         mvc.perform(get("/problem/1/users/test123")
@@ -204,7 +201,7 @@ class ProblemControllerTest {
     @Test
     @WithUserDetails("test123")
     public void problemBookmarkList_test() throws Exception{
-        when(saveArticleService.saveArticleList("test123", 1))
+        when(saveArticleService.getBookmarkArticles("test123", 1))
                 .thenReturn(List.of(ArticleDTO.builder()
                         .atcTitle("test").build()));
         mvc.perform(get("/problem/bookmark/users/test123")

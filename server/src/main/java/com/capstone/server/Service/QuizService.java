@@ -22,17 +22,24 @@ public class QuizService {
         this.quizRepository = quizRepository;
         this.quizItemRepository = quizItemRepository;
     }
-    public List<JSONObject> Quiz(int id){
-        List<JSONObject> result = new ArrayList<>();
+    public List<JSONObject> getQuiz(int id){
         List<Quiz> quiz = quizRepository.findAllByTbArticleId(id);
-        for(int i=0; i<quiz.size(); i++){
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("problem", quiz.get(i).getQuizQuestion());
-            List<String> item = quizItemRepository.findAllByTbArticleIdAndTbQuizNo(id,quiz.get(i).getQuizNo()).stream().map(r -> r.getItemValue()).collect(Collectors.toList());
-            jsonObject.put("choices", item);
-            jsonObject.put("answer", quiz.get(i).getQuizAns());
-            result.add(jsonObject);
-        }
-        return result;
+        List<JSONObject> results = getQuizProblem(id, quiz);
+        return results;
     }
+
+    private List<JSONObject> getQuizProblem(int id, List<Quiz> quiz) {
+        List<JSONObject> results = new ArrayList<>();
+        for(int i = 0; i< quiz.size(); i++){
+            JSONObject result = new JSONObject();
+            result.put("problem", quiz.get(i).getQuizQuestion());
+            List<String> item = quizItemRepository.findAllByTbArticleIdAndTbQuizNo(id, quiz.get(i).getQuizNo()).stream().map(r -> r.getItemValue()).collect(Collectors.toList());
+            result.put("choices", item);
+            result.put("answer", quiz.get(i).getQuizAns());
+            results.add(result);
+        }
+        return results;
+    }
+
+
 }

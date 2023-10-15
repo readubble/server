@@ -43,7 +43,7 @@ class DictServiceTest {
     void getDictInfoDB_test(){
         when(dictRepository.findAllByWordNmStartingWith("사과"))
                 .thenReturn(List.of(dict1, dict2));
-        List<DictResponseDTO> result = dictService.getDictInfoDB("사과", "test123");
+        List<DictResponseDTO> result = dictService.getDictionaryDB("사과", "test123");
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0).getTargetCode()).isEqualTo(1);
         verify(searchRepository, times(2)).save(any(Search.class));
@@ -51,7 +51,7 @@ class DictServiceTest {
 
     @Test
     void getDictInfo_test() throws IOException {
-        List<DictResponseDTO> result = dictService.getDictInfo("사과", "test123");
+        List<DictResponseDTO> result = dictService.getDictionary("사과", "test123");
         assertThat(result.size()).isEqualTo(8);
     }
 

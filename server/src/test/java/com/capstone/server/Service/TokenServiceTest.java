@@ -16,7 +16,6 @@ import org.springframework.test.context.ContextConfiguration;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
@@ -32,7 +31,7 @@ class TokenServiceTest {
 
     @Test
     void tokensave_test(){
-        tokenService.TokenSave(TokenDTO.builder()
+        tokenService.saveToken(TokenDTO.builder()
                 .userId("1234")
                 .token("token")
                 .status(true)
@@ -61,7 +60,7 @@ class TokenServiceTest {
     void token_update_test(){
         when(tokenRepository.findById(anyString()))
                 .thenReturn(Optional.of(Token.builder().userId("test123").token("token").status(true).build()));
-        tokenService.TokenUpdate("test123", "");
+        tokenService.updateTokenStatus("test123", "");
         verify(tokenRepository).save(argThat(token->token.getToken().equals("") && !token.isStatus()));
     }
 

@@ -67,7 +67,7 @@ class UserServiceTest {
 
         //then
         verify(userRepository, times(1)).save(any(User.class));
-        verify(tokenService, times(1)).TokenSave(any(TokenDTO.class));
+        verify(tokenService, times(1)).saveToken(any(TokenDTO.class));
     }
 
     @Test
